@@ -39,7 +39,7 @@
         const Recharts = window.Recharts || {};
         const { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, ComposedChart, Bar } = Recharts;
 
-        // --- 內建 SVG 圖標元件 (解決 Lucide UMD 錯誤) ---
+        // --- 內建 SVG 圖標元件 ---
         const IconBase = ({ children, color = "currentColor", size = 24, ...props }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
                 {children}
@@ -67,7 +67,6 @@
         const FileText = (props) => <IconBase {...props}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></IconBase>;
         const AlertCircle = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></IconBase>;
 
-        // --- App 主程式 ---
         const DEFAULT_WORKOUTS = [
             {
                 id: 'push',
@@ -120,382 +119,317 @@
             }
         ];
 
-        function FitTrackApp() {
-            // --- State Management ---
-            const [activeTab, setActiveTab] = useState('dashboard');
-            
-            // 安全的 localStorage 讀取
-            const getStoredItem = (key, defaultValue) => {
-                try {
-                    const saved = localStorage.getItem(key);
-                    return saved ? JSON.parse(saved) : defaultValue;
-                } catch (e) {
-                    console.warn('LocalStorage access failed:', e);
-                    return defaultValue;
-                }
-            };
+        // --- 將元件移出 FitTrackApp 外部，避免重複渲染導致失焦 ---
 
-            const setStoredItem = (key, value) => {
-                try {
-                    localStorage.setItem(key, JSON.stringify(value));
-                } catch (e) {
-                    console.warn('LocalStorage write failed:', e);
-                }
-            };
+        const Dashboard = ({ todayInput, setTodayInput, handleLogSubmit, saveMessage, currentWeight, bmi, tdee, recommendedCalories, daysLeft, todayStr, recommendedProtein, logs, currentBodyFat }) => {
+            const todayCalories = todayInput.calories ? parseFloat(todayInput.calories) : 0;
+            const caloriePct = Math.min((todayCalories / recommendedCalories) * 100, 100);
+            const calorieColor = todayCalories > recommendedCalories ? 'bg-red-500' : 'bg-orange-500';
 
-            // User Data & Settings
-            const [userProfile, setUserProfile] = useState(() => getStoredItem('fitTrack_profile', {
-                startWeight: 80,
-                targetWeight: 70,
-                targetDate: '2026-12-31',
-                height: 175,
-                age: 30,
-                gender: 'male',
-                activityLevel: 1.375,
-            }));
-
-            // Logs
-            const [logs, setLogs] = useState(() => getStoredItem('fitTrack_logs', [
-                { date: '2026-01-01', weight: 80, bodyFat: 25, calories: 2500, protein: 120, notes: '新年新希望，開始減脂！' },
-            ]));
-
-            // Workout Logs
-            const [workoutLogs, setWorkoutLogs] = useState(() => getStoredItem('fitTrack_workouts_v2', {}));
-
-            // Today's Input State
-            const todayStr = new Date().toISOString().split('T')[0];
-            
-            const [todayInput, setTodayInput] = useState({
-                weight: '',
-                bodyFat: '',
-                calories: '',
-                protein: '',
-                notes: ''
-            });
-
-            // Auto-load today's data if exists
-            useEffect(() => {
-                const existingLog = logs.find(l => l.date === todayStr);
-                if (existingLog) {
-                    setTodayInput({
-                        weight: existingLog.weight || '',
-                        bodyFat: existingLog.bodyFat || '',
-                        calories: existingLog.calories || '',
-                        protein: existingLog.protein || '',
-                        notes: existingLog.notes || ''
-                    });
-                }
-            }, [logs, todayStr]);
-
-            // Selected workout plan for today
-            const [selectedPlanId, setSelectedPlanId] = useState('push');
-            const [saveMessage, setSaveMessage] = useState('');
-
-            // --- Effects ---
-            useEffect(() => {
-                setStoredItem('fitTrack_profile', userProfile);
-            }, [userProfile]);
-
-            useEffect(() => {
-                setStoredItem('fitTrack_logs', logs);
-            }, [logs]);
-
-            useEffect(() => {
-                setStoredItem('fitTrack_workouts_v2', workoutLogs);
-            }, [workoutLogs]);
-
-            // --- Helpers ---
-            const currentWeight = logs.length > 0 ? logs[logs.length - 1].weight : userProfile.startWeight;
-            const currentBodyFat = logs.length > 0 ? logs[logs.length - 1].bodyFat : 0;
-            
-            // Calculations
-            const bmi = (currentWeight / Math.pow(userProfile.height / 100, 2)).toFixed(1);
-            
-            const calculateTDEE = () => {
-                let bmr = 10 * currentWeight + 6.25 * userProfile.height - 5 * userProfile.age;
-                bmr += userProfile.gender === 'male' ? 5 : -161;
-                return Math.round(bmr * userProfile.activityLevel);
-            };
-            const tdee = calculateTDEE();
-            const recommendedCalories = Math.round(tdee * 0.85); // 15% Deficit
-            const recommendedProtein = Math.round(currentWeight * 2.0); // High protein for cutting
-
-            const daysLeft = useMemo(() => {
-                const target = new Date(userProfile.targetDate);
-                const today = new Date();
-                const diffTime = target - today;
-                if (diffTime < 0) return 0;
-                return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-            }, [userProfile.targetDate]);
-
-            const progressPercentage = useMemo(() => {
-                const totalToLose = userProfile.startWeight - userProfile.targetWeight;
-                const currentLost = userProfile.startWeight - currentWeight;
-                if (totalToLose === 0) return 0;
-                const pct = (currentLost / totalToLose) * 100;
-                return Math.min(Math.max(pct, 0), 100).toFixed(1);
-            }, [userProfile.startWeight, userProfile.targetWeight, currentWeight]);
-
-            // --- Handlers ---
-            const handleLogSubmit = (e) => {
-                e.preventDefault();
-                if (!todayInput.weight) return;
-
-                const newLog = {
-                    date: todayStr,
-                    weight: parseFloat(todayInput.weight),
-                    bodyFat: todayInput.bodyFat ? parseFloat(todayInput.bodyFat) : null,
-                    calories: todayInput.calories ? parseFloat(todayInput.calories) : null,
-                    protein: todayInput.protein ? parseFloat(todayInput.protein) : null,
-                    notes: todayInput.notes
-                };
-
-                const existingIndex = logs.findIndex(l => l.date === todayStr);
-                let newLogs;
-                if (existingIndex >= 0) {
-                    newLogs = [...logs];
-                    newLogs[existingIndex] = { ...newLogs[existingIndex], ...newLog };
-                } else {
-                    newLogs = [...logs, newLog];
-                    newLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
-                }
-                
-                setLogs(newLogs);
-                setSaveMessage('紀錄已更新！Keep Grinding!');
-                setTimeout(() => setSaveMessage(''), 3000);
-            };
-
-            const updateExerciseLog = (planId, exerciseIndex, field, value) => {
-                const currentDayLogs = workoutLogs[todayStr] || {};
-                const currentPlanLogs = currentDayLogs[planId] || {};
-                const currentExerciseLog = currentPlanLogs[exerciseIndex] || { completed: false };
-
-                const updatedExerciseLog = { ...currentExerciseLog, [field]: value };
-                
-                if (value !== '') {
-                    updatedExerciseLog.completed = true;
-                }
-
-                setWorkoutLogs({
-                    ...workoutLogs,
-                    [todayStr]: {
-                        ...currentDayLogs,
-                        [planId]: {
-                            ...currentPlanLogs,
-                            [exerciseIndex]: updatedExerciseLog
-                        }
-                    }
-                });
-            };
-
-            const toggleExerciseCompletion = (planId, exerciseIndex) => {
-                const currentStatus = workoutLogs[todayStr]?.[planId]?.[exerciseIndex]?.completed || false;
-                updateExerciseLog(planId, exerciseIndex, 'completed', !currentStatus);
-            };
-
-            const deleteLog = (date) => {
-                if (confirm('確定要刪除這筆紀錄嗎？')) {
-                    setLogs(logs.filter(l => l.date !== date));
-                }
-            };
-
-            // --- Components ---
-
-            const Dashboard = () => {
-                const todayCalories = todayInput.calories ? parseFloat(todayInput.calories) : 0;
-                const caloriePct = Math.min((todayCalories / recommendedCalories) * 100, 100);
-                const calorieColor = todayCalories > recommendedCalories ? 'bg-red-500' : 'bg-orange-500';
-
-                return (
-                    <div className="space-y-6 animate-fade-in">
-                        {/* Top Stats Cards */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-l-rose-500 border border-slate-100">
-                                <p className="text-xs text-slate-500 mb-1 font-semibold tracking-wide uppercase">目前體重 / BMI</p>
-                                <div className="flex items-baseline gap-2">
-                                    <p className="text-2xl font-black text-slate-800">{currentWeight}</p>
-                                    <span className="text-xs px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">BMI {bmi}</span>
-                                </div>
-                            </div>
-                            <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-l-orange-500 border border-slate-100">
-                                <p className="text-xs text-slate-500 mb-1 font-semibold tracking-wide uppercase">每日消耗 TDEE</p>
-                                <div className="flex items-baseline gap-2">
-                                    <p className="text-2xl font-black text-orange-600">{tdee}</p>
-                                    <span className="text-xs text-slate-400 font-bold">kcal</span>
-                                </div>
-                            </div>
-                            <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-l-emerald-500 border border-slate-100">
-                                <p className="text-xs text-slate-500 mb-1 font-semibold tracking-wide uppercase">減脂目標熱量</p>
-                                <div className="flex items-baseline gap-2">
-                                    <p className="text-2xl font-black text-emerald-600">{recommendedCalories}</p>
-                                    <span className="text-xs text-slate-400 font-bold">kcal</span>
-                                </div>
-                            </div>
-                            <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-l-blue-600 border border-slate-100">
-                                <p className="text-xs text-slate-500 mb-1 font-semibold tracking-wide uppercase">剩餘戰鬥天數</p>
-                                <p className="text-2xl font-black text-blue-700">{daysLeft} <span className="text-sm font-bold text-slate-400">天</span></p>
+            return (
+                <div className="space-y-6 animate-fade-in">
+                    {/* Top Stats Cards */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-l-rose-500 border border-slate-100">
+                            <p className="text-xs text-slate-500 mb-1 font-semibold tracking-wide uppercase">目前體重 / BMI</p>
+                            <div className="flex items-baseline gap-2">
+                                <p className="text-2xl font-black text-slate-800">{currentWeight}</p>
+                                <span className="text-xs px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">BMI {bmi}</span>
                             </div>
                         </div>
-
-                        {/* Nutrition Progress */}
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                            <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2">
-                                <Utensils className="w-5 h-5 text-orange-500" />
-                                今日營養儀表板
-                            </h3>
-                            <div className="space-y-4">
-                                <div>
-                                    <div className="flex justify-between text-xs font-bold text-slate-600 mb-1">
-                                        <span>熱量攝取: {todayCalories} / {recommendedCalories} kcal</span>
-                                        <span className={todayCalories > recommendedCalories ? 'text-red-500' : 'text-emerald-500'}>
-                                            {todayCalories > recommendedCalories ? '已超標' : '控制中'}
-                                        </span>
-                                    </div>
-                                    <div className="w-full bg-slate-100 rounded-full h-4 overflow-hidden shadow-inner">
-                                        <div 
-                                            className={`h-4 rounded-full transition-all duration-700 ${calorieColor}`}
-                                            style={{ width: `${caloriePct}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2 text-xs text-slate-500 bg-slate-50 p-2 rounded">
-                                    <AlertCircle className="w-4 h-4 text-blue-500" />
-                                    <span>建議蛋白質攝取: <strong>{recommendedProtein}g</strong> (體重 x 2.0g) 以維持肌肉量</span>
-                                </div>
+                        <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-l-orange-500 border border-slate-100">
+                            <p className="text-xs text-slate-500 mb-1 font-semibold tracking-wide uppercase">每日消耗 TDEE</p>
+                            <div className="flex items-baseline gap-2">
+                                <p className="text-2xl font-black text-orange-600">{tdee}</p>
+                                <span className="text-xs text-slate-400 font-bold">kcal</span>
                             </div>
                         </div>
-
-                        {/* Charts */}
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                            <h3 className="font-bold text-slate-700 mb-6 flex items-center gap-2">
-                                <TrendingDown className="w-5 h-5 text-rose-600" />
-                                戰鬥數據分析
-                            </h3>
-                            <div className="h-72 w-full">
-                                {Recharts && AreaChart ? (
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <ComposedChart data={logs}>
-                                            <defs>
-                                                <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#e11d48" stopOpacity={0.2}/>
-                                                    <stop offset="95%" stopColor="#e11d48" stopOpacity={0}/>
-                                                </linearGradient>
-                                            </defs>
-                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis dataKey="date" tick={{fontSize: 12, fill: '#64748b', fontWeight: 'bold'}} tickMargin={10} />
-                                            <YAxis yAxisId="left" domain={['dataMin - 1', 'dataMax + 1']} tick={{fontSize: 12, fill: '#64748b', fontWeight: 'bold'}} />
-                                            <YAxis yAxisId="right" orientation="right" domain={[0, 'dataMax + 500']} hide />
-                                            <Tooltip 
-                                                contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', backgroundColor: '#1e293b', color: '#fff'}}
-                                                itemStyle={{color: '#fff'}}
-                                                labelStyle={{color: '#94a3b8', marginBottom: '0.5rem'}}
-                                            />
-                                            <Area 
-                                                yAxisId="left"
-                                                type="monotone" 
-                                                dataKey="weight" 
-                                                stroke="#e11d48" 
-                                                strokeWidth={4}
-                                                fillOpacity={1} 
-                                                fill="url(#colorWeight)" 
-                                                name="體重 (kg)"
-                                                activeDot={{r: 6, strokeWidth: 0, fill: '#e11d48'}}
-                                            />
-                                            <Bar 
-                                                yAxisId="right"
-                                                dataKey="calories" 
-                                                barSize={20}
-                                                fill="#f59e0b" 
-                                                radius={[4, 4, 0, 0]}
-                                                name="攝取熱量 (kcal)"
-                                                opacity={0.6}
-                                            />
-                                            <Legend verticalAlign="top" height={36} iconType="circle"/>
-                                        </ComposedChart>
-                                    </ResponsiveContainer>
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-slate-400 bg-slate-50 rounded-lg border border-dashed border-slate-300">
-                                        <p>圖表載入中... (若長時間未顯示，請檢查網路連線)</p>
-                                    </div>
-                                )}
+                        <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-l-emerald-500 border border-slate-100">
+                            <p className="text-xs text-slate-500 mb-1 font-semibold tracking-wide uppercase">減脂目標熱量</p>
+                            <div className="flex items-baseline gap-2">
+                                <p className="text-2xl font-black text-emerald-600">{recommendedCalories}</p>
+                                <span className="text-xs text-slate-400 font-bold">kcal</span>
                             </div>
                         </div>
-
-                        {/* Quick Log Input */}
-                        <div className="bg-gradient-to-br from-slate-900 to-rose-900 p-6 rounded-xl shadow-xl text-white border border-rose-900/50 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-                                <Flame className="w-32 h-32 text-rose-500" />
-                            </div>
-                            
-                            <h3 className="font-bold text-lg mb-4 flex items-center gap-2 relative z-10">
-                                <Plus className="w-5 h-5 text-rose-400" />
-                                今日戰績紀錄 ({todayStr})
-                            </h3>
-                            <form onSubmit={handleLogSubmit} className="grid grid-cols-2 gap-4 relative z-10">
-                                <div>
-                                    <label className="text-xs text-rose-200/70 block mb-1 flex items-center gap-1 font-bold"><Scale className="w-3 h-3"/> 體重 (kg)</label>
-                                    <input 
-                                        type="number" step="0.1" 
-                                        value={todayInput.weight}
-                                        onChange={(e) => setTodayInput({...todayInput, weight: e.target.value})}
-                                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
-                                        placeholder={currentWeight}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="text-xs text-rose-200/70 block mb-1 flex items-center gap-1 font-bold"><Activity className="w-3 h-3"/> 體脂 (%)</label>
-                                    <input 
-                                        type="number" step="0.1" 
-                                        value={todayInput.bodyFat}
-                                        onChange={(e) => setTodayInput({...todayInput, bodyFat: e.target.value})}
-                                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
-                                        placeholder={currentBodyFat || '0'}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="text-xs text-rose-200/70 block mb-1 flex items-center gap-1 font-bold"><Flame className="w-3 h-3"/> 熱量 (kcal)</label>
-                                    <input 
-                                        type="number"
-                                        value={todayInput.calories}
-                                        onChange={(e) => setTodayInput({...todayInput, calories: e.target.value})}
-                                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
-                                        placeholder={recommendedCalories}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="text-xs text-rose-200/70 block mb-1 flex items-center gap-1 font-bold"><Utensils className="w-3 h-3"/> 蛋白質 (g)</label>
-                                    <input 
-                                        type="number"
-                                        value={todayInput.protein}
-                                        onChange={(e) => setTodayInput({...todayInput, protein: e.target.value})}
-                                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
-                                        placeholder={recommendedProtein}
-                                    />
-                                </div>
-                                <div className="col-span-2">
-                                    <label className="text-xs text-rose-200/70 block mb-1 flex items-center gap-1 font-bold"><FileText className="w-3 h-3"/> 戰鬥日記 (心情/飲食備註)</label>
-                                    <textarea 
-                                        value={todayInput.notes}
-                                        onChange={(e) => setTodayInput({...todayInput, notes: e.target.value})}
-                                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20 text-sm h-20 resize-none"
-                                        placeholder="今天狀況如何？吃了什麼？寫下來吧！"
-                                    />
-                                </div>
-                                <button type="submit" className="col-span-2 bg-rose-600 hover:bg-rose-500 text-white p-3 rounded-lg transition-colors font-black mt-2 flex justify-center items-center gap-2 shadow-lg shadow-rose-900/50 uppercase tracking-widest text-sm transform active:scale-95 duration-100">
-                                    <Save className="w-4 h-4" /> 儲存並繼續戰鬥
-                                </button>
-                                {saveMessage && (
-                                    <div className="col-span-2 text-center text-emerald-400 text-sm font-bold animate-pulse">
-                                        {saveMessage}
-                                    </div>
-                                )}
-                            </form>
+                        <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-l-blue-600 border border-slate-100">
+                            <p className="text-xs text-slate-500 mb-1 font-semibold tracking-wide uppercase">剩餘戰鬥天數</p>
+                            <p className="text-2xl font-black text-blue-700">{daysLeft} <span className="text-sm font-bold text-slate-400">天</span></p>
                         </div>
                     </div>
-                );
-            };
 
-            const HistorySection = () => (
+                    {/* Nutrition Progress */}
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2">
+                            <Utensils className="w-5 h-5 text-orange-500" />
+                            今日營養儀表板
+                        </h3>
+                        <div className="space-y-4">
+                            <div>
+                                <div className="flex justify-between text-xs font-bold text-slate-600 mb-1">
+                                    <span>熱量攝取: {todayCalories} / {recommendedCalories} kcal</span>
+                                    <span className={todayCalories > recommendedCalories ? 'text-red-500' : 'text-emerald-500'}>
+                                        {todayCalories > recommendedCalories ? '已超標' : '控制中'}
+                                    </span>
+                                </div>
+                                <div className="w-full bg-slate-100 rounded-full h-4 overflow-hidden shadow-inner">
+                                    <div 
+                                        className={`h-4 rounded-full transition-all duration-700 ${calorieColor}`}
+                                        style={{ width: `${caloriePct}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-slate-500 bg-slate-50 p-2 rounded">
+                                <AlertCircle className="w-4 h-4 text-blue-500" />
+                                <span>建議蛋白質攝取: <strong>{recommendedProtein}g</strong> (體重 x 2.0g) 以維持肌肉量</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Charts */}
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <h3 className="font-bold text-slate-700 mb-6 flex items-center gap-2">
+                            <TrendingDown className="w-5 h-5 text-rose-600" />
+                            戰鬥數據分析
+                        </h3>
+                        <div className="h-72 w-full">
+                            {Recharts && AreaChart ? (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <ComposedChart data={logs}>
+                                        <defs>
+                                            <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#e11d48" stopOpacity={0.2}/>
+                                                <stop offset="95%" stopColor="#e11d48" stopOpacity={0}/>
+                                            </linearGradient>
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                        <XAxis dataKey="date" tick={{fontSize: 12, fill: '#64748b', fontWeight: 'bold'}} tickMargin={10} />
+                                        <YAxis yAxisId="left" domain={['dataMin - 1', 'dataMax + 1']} tick={{fontSize: 12, fill: '#64748b', fontWeight: 'bold'}} />
+                                        <YAxis yAxisId="right" orientation="right" domain={[0, 'dataMax + 500']} hide />
+                                        <Tooltip 
+                                            contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', backgroundColor: '#1e293b', color: '#fff'}}
+                                            itemStyle={{color: '#fff'}}
+                                            labelStyle={{color: '#94a3b8', marginBottom: '0.5rem'}}
+                                        />
+                                        <Area 
+                                            yAxisId="left"
+                                            type="monotone" 
+                                            dataKey="weight" 
+                                            stroke="#e11d48" 
+                                            strokeWidth={4}
+                                            fillOpacity={1} 
+                                            fill="url(#colorWeight)" 
+                                            name="體重 (kg)"
+                                            activeDot={{r: 6, strokeWidth: 0, fill: '#e11d48'}}
+                                        />
+                                        <Bar 
+                                            yAxisId="right"
+                                            dataKey="calories" 
+                                            barSize={20}
+                                            fill="#f59e0b" 
+                                            radius={[4, 4, 0, 0]}
+                                            name="攝取熱量 (kcal)"
+                                            opacity={0.6}
+                                        />
+                                        <Legend verticalAlign="top" height={36} iconType="circle"/>
+                                    </ComposedChart>
+                                </ResponsiveContainer>
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-slate-400 bg-slate-50 rounded-lg border border-dashed border-slate-300">
+                                    <p>圖表載入中... (若長時間未顯示，請檢查網路連線)</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Quick Log Input */}
+                    <div className="bg-gradient-to-br from-slate-900 to-rose-900 p-6 rounded-xl shadow-xl text-white border border-rose-900/50 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                            <Flame className="w-32 h-32 text-rose-500" />
+                        </div>
+                        
+                        <h3 className="font-bold text-lg mb-4 flex items-center gap-2 relative z-10">
+                            <Plus className="w-5 h-5 text-rose-400" />
+                            今日戰績紀錄 ({todayStr})
+                        </h3>
+                        <form onSubmit={handleLogSubmit} className="grid grid-cols-2 gap-4 relative z-10">
+                            <div>
+                                <label className="text-xs text-rose-200/70 block mb-1 flex items-center gap-1 font-bold"><Scale className="w-3 h-3"/> 體重 (kg)</label>
+                                <input 
+                                    type="number" step="0.1" 
+                                    value={todayInput.weight}
+                                    onChange={(e) => setTodayInput({...todayInput, weight: e.target.value})}
+                                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
+                                    placeholder={currentWeight}
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs text-rose-200/70 block mb-1 flex items-center gap-1 font-bold"><Activity className="w-3 h-3"/> 體脂 (%)</label>
+                                <input 
+                                    type="number" step="0.1" 
+                                    value={todayInput.bodyFat}
+                                    onChange={(e) => setTodayInput({...todayInput, bodyFat: e.target.value})}
+                                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
+                                    placeholder={currentBodyFat || '0'}
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs text-rose-200/70 block mb-1 flex items-center gap-1 font-bold"><Flame className="w-3 h-3"/> 熱量 (kcal)</label>
+                                <input 
+                                    type="number"
+                                    value={todayInput.calories}
+                                    onChange={(e) => setTodayInput({...todayInput, calories: e.target.value})}
+                                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
+                                    placeholder={recommendedCalories}
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs text-rose-200/70 block mb-1 flex items-center gap-1 font-bold"><Utensils className="w-3 h-3"/> 蛋白質 (g)</label>
+                                <input 
+                                    type="number"
+                                    value={todayInput.protein}
+                                    onChange={(e) => setTodayInput({...todayInput, protein: e.target.value})}
+                                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
+                                    placeholder={recommendedProtein}
+                                />
+                            </div>
+                            <div className="col-span-2">
+                                <label className="text-xs text-rose-200/70 block mb-1 flex items-center gap-1 font-bold"><FileText className="w-3 h-3"/> 戰鬥日記 (心情/飲食備註)</label>
+                                <textarea 
+                                    value={todayInput.notes}
+                                    onChange={(e) => setTodayInput({...todayInput, notes: e.target.value})}
+                                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20 text-sm h-20 resize-none"
+                                    placeholder="今天狀況如何？吃了什麼？寫下來吧！"
+                                />
+                            </div>
+                            <button type="submit" className="col-span-2 bg-rose-600 hover:bg-rose-500 text-white p-3 rounded-lg transition-colors font-black mt-2 flex justify-center items-center gap-2 shadow-lg shadow-rose-900/50 uppercase tracking-widest text-sm transform active:scale-95 duration-100">
+                                <Save className="w-4 h-4" /> 儲存並繼續戰鬥
+                            </button>
+                            {saveMessage && (
+                                <div className="col-span-2 text-center text-emerald-400 text-sm font-bold animate-pulse">
+                                    {saveMessage}
+                                </div>
+                            )}
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        const WorkoutSection = ({ selectedPlanId, setSelectedPlanId, workoutLogs, updateExerciseLog, toggleExerciseCompletion, todayStr }) => {
+            const activePlan = DEFAULT_WORKOUTS.find(p => p.id === selectedPlanId);
+            const isCardio = activePlan.type === 'cardio';
+            
+            return (
+                <div className="space-y-4 animate-fade-in pb-20">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <Dumbbell className="w-6 h-6 text-rose-600" />
+                            今日菜單
+                        </h2>
+                        <div className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+                            {todayStr}
+                        </div>
+                    </div>
+                
+                    {/* Menu Selection */}
+                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                        {DEFAULT_WORKOUTS.map(plan => (
+                            <button
+                                key={plan.id}
+                                onClick={() => setSelectedPlanId(plan.id)}
+                                className={`px-5 py-2.5 rounded-lg whitespace-nowrap text-sm font-bold transition-all shadow-sm border transform active:scale-95 duration-100 ${
+                                    selectedPlanId === plan.id 
+                                    ? 'bg-rose-600 text-white border-rose-600 shadow-rose-200' 
+                                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                                }`}
+                            >
+                                {plan.name}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Exercise List */}
+                    <div className="space-y-3">
+                        {activePlan.exercises.map((ex, idx) => {
+                            const logData = workoutLogs[todayStr]?.[selectedPlanId]?.[idx] || {};
+                            const isDone = logData.completed;
+
+                            return (
+                                <div key={idx} className={`bg-white rounded-xl shadow-sm border-l-4 transition-all ${isDone ? 'border-l-rose-500 border-rose-100 bg-rose-50/20' : 'border-l-slate-200 border-slate-100'}`}>
+                                    {/* Header Row */}
+                                    <div className="p-4 flex items-start justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <button 
+                                                onClick={() => toggleExerciseCompletion(selectedPlanId, idx)}
+                                                className={`transition-colors transform active:scale-90 duration-100 ${isDone ? 'text-rose-500' : 'text-slate-300 hover:text-rose-300'}`}
+                                            >
+                                                {isDone ? <CheckCircle2 className="w-6 h-6 fill-rose-100" /> : <Circle className="w-6 h-6" />}
+                                            </button>
+                                            <div>
+                                                <h4 className={`font-bold ${isDone ? 'text-rose-900 line-through decoration-rose-400' : 'text-slate-800'}`}>{ex.name}</h4>
+                                                <p className="text-xs font-medium text-slate-500 bg-slate-100 inline-block px-1.5 py-0.5 rounded mt-1">
+                                                    目標: {ex.defaultSets} {isCardio ? '' : '組'} {isCardio ? '' : 'x'} {ex.defaultReps}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Input Row */}
+                                    <div className="px-4 pb-4 pl-12 flex gap-3">
+                                        {/* Field 1: Weight or Duration */}
+                                        <div className="flex-1 relative group">
+                                            <input 
+                                                type="number" 
+                                                placeholder="0"
+                                                value={isCardio ? (logData.duration || '') : (logData.weight || '')}
+                                                onChange={(e) => updateExerciseLog(selectedPlanId, idx, isCardio ? 'duration' : 'weight', e.target.value)}
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-3 pr-8 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-rose-500 focus:bg-white outline-none transition-all"
+                                            />
+                                            <span className="absolute right-3 top-2 text-xs text-slate-400 font-bold group-focus-within:text-rose-500 pointer-events-none flex items-center gap-1">
+                                                {isCardio ? <Timer className="w-3 h-3"/> : <Scale className="w-3 h-3"/>}
+                                                {isCardio ? 'min' : 'kg'}
+                                            </span>
+                                        </div>
+                                        
+                                        {/* Field 2: Reps or Distance */}
+                                        <div className="flex-1 relative group">
+                                            <input 
+                                                type="number" 
+                                                placeholder="0"
+                                                value={isCardio ? (logData.distance || '') : (logData.reps || '')}
+                                                onChange={(e) => updateExerciseLog(selectedPlanId, idx, isCardio ? 'distance' : 'reps', e.target.value)}
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-3 pr-8 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-rose-500 focus:bg-white outline-none transition-all"
+                                            />
+                                            <span className="absolute right-3 top-2 text-xs text-slate-400 font-bold group-focus-within:text-rose-500 pointer-events-none flex items-center gap-1">
+                                                {isCardio ? <Footprints className="w-3 h-3"/> : <Dumbbell className="w-3 h-3"/>}
+                                                {isCardio ? 'km' : 'reps'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div className="bg-slate-900 p-4 rounded-lg text-sm text-slate-300 flex gap-3 items-start border border-slate-800 shadow-lg">
+                        <div className="mt-0.5 p-1 bg-rose-600 rounded text-white"><Dumbbell className="w-3 h-3"/></div>
+                        <div>
+                            <p className="font-bold text-white mb-1">
+                                {isCardio ? '🔥 有氧小知識 (Cardio Tips)' : '💪 漸進式負荷 (Progressive Overload)'}
+                            </p>
+                            <p className="opacity-80 text-xs leading-relaxed">
+                                {isCardio 
+                                    ? '有氧運動能有效提升心肺功能並輔助燃脂。建議每週進行 150 分鐘中等強度有氧。記得在重訓後進行有氧效果更佳！' 
+                                    : '紀錄每一次的重量與次數。只要比上次多舉 1kg 或多做 1下，你就在變強！'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const HistorySection = ({ logs, deleteLog }) => {
+            return (
                 <div className="animate-fade-in pb-20">
                     <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
                         <History className="w-6 h-6 text-rose-600" />
@@ -555,8 +489,10 @@
                     </div>
                 </div>
             );
+        };
 
-            const SettingsSection = () => (
+        const SettingsSection = ({ userProfile, setUserProfile }) => {
+            return (
                 <div className="animate-fade-in pb-20">
                     <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
                         <Settings className="w-6 h-6 text-rose-600" />
@@ -660,8 +596,167 @@
                     </div>
                 </div>
             );
+        };
 
-            // --- Main Render ---
+        function FitTrackApp() {
+            const [activeTab, setActiveTab] = useState('dashboard');
+            
+            const getStoredItem = (key, defaultValue) => {
+                try {
+                    const saved = localStorage.getItem(key);
+                    return saved ? JSON.parse(saved) : defaultValue;
+                } catch (e) {
+                    console.warn('LocalStorage access failed:', e);
+                    return defaultValue;
+                }
+            };
+
+            const setStoredItem = (key, value) => {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                } catch (e) {
+                    console.warn('LocalStorage write failed:', e);
+                }
+            };
+
+            const [userProfile, setUserProfile] = useState(() => getStoredItem('fitTrack_profile', {
+                startWeight: 80,
+                targetWeight: 70,
+                targetDate: '2026-12-31',
+                height: 175,
+                age: 30,
+                gender: 'male',
+                activityLevel: 1.375,
+            }));
+
+            const [logs, setLogs] = useState(() => getStoredItem('fitTrack_logs', [
+                { date: '2026-01-01', weight: 80, bodyFat: 25, calories: 2500, protein: 120, notes: '新年新希望，開始減脂！' },
+            ]));
+
+            const [workoutLogs, setWorkoutLogs] = useState(() => getStoredItem('fitTrack_workouts_v2', {}));
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            
+            const [todayInput, setTodayInput] = useState({
+                weight: '',
+                bodyFat: '',
+                calories: '',
+                protein: '',
+                notes: ''
+            });
+
+            useEffect(() => {
+                const existingLog = logs.find(l => l.date === todayStr);
+                if (existingLog) {
+                    setTodayInput({
+                        weight: existingLog.weight || '',
+                        bodyFat: existingLog.bodyFat || '',
+                        calories: existingLog.calories || '',
+                        protein: existingLog.protein || '',
+                        notes: existingLog.notes || ''
+                    });
+                }
+            }, [logs, todayStr]);
+
+            const [selectedPlanId, setSelectedPlanId] = useState('push');
+            const [saveMessage, setSaveMessage] = useState('');
+
+            useEffect(() => {
+                setStoredItem('fitTrack_profile', userProfile);
+            }, [userProfile]);
+
+            useEffect(() => {
+                setStoredItem('fitTrack_logs', logs);
+            }, [logs]);
+
+            useEffect(() => {
+                setStoredItem('fitTrack_workouts_v2', workoutLogs);
+            }, [workoutLogs]);
+
+            const currentWeight = logs.length > 0 ? logs[logs.length - 1].weight : userProfile.startWeight;
+            const currentBodyFat = logs.length > 0 ? logs[logs.length - 1].bodyFat : 0;
+            
+            const bmi = (currentWeight / Math.pow(userProfile.height / 100, 2)).toFixed(1);
+            
+            const calculateTDEE = () => {
+                let bmr = 10 * currentWeight + 6.25 * userProfile.height - 5 * userProfile.age;
+                bmr += userProfile.gender === 'male' ? 5 : -161;
+                return Math.round(bmr * userProfile.activityLevel);
+            };
+            const tdee = calculateTDEE();
+            const recommendedCalories = Math.round(tdee * 0.85); // 15% Deficit
+            const recommendedProtein = Math.round(currentWeight * 2.0); // High protein for cutting
+
+            const daysLeft = useMemo(() => {
+                const target = new Date(userProfile.targetDate);
+                const today = new Date();
+                const diffTime = target - today;
+                if (diffTime < 0) return 0;
+                return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            }, [userProfile.targetDate]);
+
+            const handleLogSubmit = (e) => {
+                e.preventDefault();
+                if (!todayInput.weight) return;
+
+                const newLog = {
+                    date: todayStr,
+                    weight: parseFloat(todayInput.weight),
+                    bodyFat: todayInput.bodyFat ? parseFloat(todayInput.bodyFat) : null,
+                    calories: todayInput.calories ? parseFloat(todayInput.calories) : null,
+                    protein: todayInput.protein ? parseFloat(todayInput.protein) : null,
+                    notes: todayInput.notes
+                };
+
+                const existingIndex = logs.findIndex(l => l.date === todayStr);
+                let newLogs;
+                if (existingIndex >= 0) {
+                    newLogs = [...logs];
+                    newLogs[existingIndex] = { ...newLogs[existingIndex], ...newLog };
+                } else {
+                    newLogs = [...logs, newLog];
+                    newLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
+                }
+                
+                setLogs(newLogs);
+                setSaveMessage('紀錄已更新！Keep Grinding!');
+                setTimeout(() => setSaveMessage(''), 3000);
+            };
+
+            const updateExerciseLog = (planId, exerciseIndex, field, value) => {
+                const currentDayLogs = workoutLogs[todayStr] || {};
+                const currentPlanLogs = currentDayLogs[planId] || {};
+                const currentExerciseLog = currentPlanLogs[exerciseIndex] || { completed: false };
+
+                const updatedExerciseLog = { ...currentExerciseLog, [field]: value };
+                
+                if (value !== '') {
+                    updatedExerciseLog.completed = true;
+                }
+
+                setWorkoutLogs({
+                    ...workoutLogs,
+                    [todayStr]: {
+                        ...currentDayLogs,
+                        [planId]: {
+                            ...currentPlanLogs,
+                            [exerciseIndex]: updatedExerciseLog
+                        }
+                    }
+                });
+            };
+
+            const toggleExerciseCompletion = (planId, exerciseIndex) => {
+                const currentStatus = workoutLogs[todayStr]?.[planId]?.[exerciseIndex]?.completed || false;
+                updateExerciseLog(planId, exerciseIndex, 'completed', !currentStatus);
+            };
+
+            const deleteLog = (date) => {
+                if (confirm('確定要刪除這筆紀錄嗎？')) {
+                    setLogs(logs.filter(l => l.date !== date));
+                }
+            };
+
             return (
                 <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-24 md:pb-0">
                     
@@ -692,10 +787,45 @@
 
                     {/* Main Content Area */}
                     <main className="max-w-3xl mx-auto px-4 py-6">
-                        {activeTab === 'dashboard' && <Dashboard />}
-                        {activeTab === 'workout' && <WorkoutSection />}
-                        {activeTab === 'history' && <HistorySection />}
-                        {activeTab === 'settings' && <SettingsSection />}
+                        {activeTab === 'dashboard' && (
+                            <Dashboard 
+                                todayInput={todayInput} 
+                                setTodayInput={setTodayInput}
+                                handleLogSubmit={handleLogSubmit}
+                                saveMessage={saveMessage}
+                                currentWeight={currentWeight}
+                                bmi={bmi}
+                                tdee={tdee}
+                                recommendedCalories={recommendedCalories}
+                                daysLeft={daysLeft}
+                                todayStr={todayStr}
+                                recommendedProtein={recommendedProtein}
+                                logs={logs}
+                                currentBodyFat={currentBodyFat}
+                            />
+                        )}
+                        {activeTab === 'workout' && (
+                            <WorkoutSection 
+                                selectedPlanId={selectedPlanId}
+                                setSelectedPlanId={setSelectedPlanId}
+                                workoutLogs={workoutLogs}
+                                updateExerciseLog={updateExerciseLog}
+                                toggleExerciseCompletion={toggleExerciseCompletion}
+                                todayStr={todayStr}
+                            />
+                        )}
+                        {activeTab === 'history' && (
+                            <HistorySection 
+                                logs={logs}
+                                deleteLog={deleteLog}
+                            />
+                        )}
+                        {activeTab === 'settings' && (
+                            <SettingsSection 
+                                userProfile={userProfile}
+                                setUserProfile={setUserProfile}
+                            />
+                        )}
                     </main>
 
                     {/* Mobile Navigation Bar (Fixed Bottom) */}
