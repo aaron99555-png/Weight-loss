@@ -311,7 +311,7 @@
                                     value={todayInput.weight}
                                     onChange={(e) => setTodayInput({...todayInput, weight: e.target.value})}
                                     className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
-                                    placeholder="輸入體重"
+                                    placeholder=""
                                 />
                             </div>
                             <div>
@@ -321,7 +321,7 @@
                                     value={todayInput.bodyFat}
                                     onChange={(e) => setTodayInput({...todayInput, bodyFat: e.target.value})}
                                     className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
-                                    placeholder="輸入體脂"
+                                    placeholder=""
                                 />
                             </div>
                             {/* New Fields for Body Composition */}
@@ -332,7 +332,7 @@
                                     value={todayInput.muscleMass}
                                     onChange={(e) => setTodayInput({...todayInput, muscleMass: e.target.value})}
                                     className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
-                                    placeholder="輸入肌肉量"
+                                    placeholder=""
                                 />
                             </div>
                             <div>
@@ -342,7 +342,7 @@
                                     value={todayInput.visceralFat}
                                     onChange={(e) => setTodayInput({...todayInput, visceralFat: e.target.value})}
                                     className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
-                                    placeholder="輸入內臟脂肪"
+                                    placeholder=""
                                 />
                             </div>
 
@@ -353,7 +353,7 @@
                                     value={todayInput.calories}
                                     onChange={(e) => setTodayInput({...todayInput, calories: e.target.value})}
                                     className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
-                                    placeholder="輸入熱量"
+                                    placeholder=""
                                 />
                             </div>
                             <div>
@@ -363,7 +363,7 @@
                                     value={todayInput.protein}
                                     onChange={(e) => setTodayInput({...todayInput, protein: e.target.value})}
                                     className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20"
-                                    placeholder="輸入蛋白質"
+                                    placeholder=""
                                 />
                             </div>
                             <div className="col-span-2">
@@ -372,7 +372,7 @@
                                     value={todayInput.notes}
                                     onChange={(e) => setTodayInput({...todayInput, notes: e.target.value})}
                                     className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-rose-500 focus:bg-black/50 transition-all font-bold placeholder-white/20 text-sm h-20 resize-none"
-                                    placeholder="今天狀況如何？吃了什麼？寫下來吧！"
+                                    placeholder=""
                                 />
                             </div>
                             <button type="submit" className="col-span-2 bg-rose-600 hover:bg-rose-500 text-white p-3 rounded-lg transition-colors font-black mt-2 flex justify-center items-center gap-2 shadow-lg shadow-rose-900/50 uppercase tracking-widest text-sm transform active:scale-95 duration-100">
@@ -703,8 +703,8 @@
             };
 
             const [userProfile, setUserProfile] = useState(() => getStoredItem('fitTrack_profile', {
-                startWeight: 80,
-                targetWeight: 70,
+                startWeight: 60,
+                targetWeight: 55,
                 targetDate: '2026-12-31',
                 height: 175,
                 age: 30,
@@ -713,7 +713,7 @@
             }));
 
             const [logs, setLogs] = useState(() => getStoredItem('fitTrack_logs', [
-                { date: '2026-01-01', weight: 80, bodyFat: 25, muscleMass: 35, visceralFat: 8, calories: 2500, protein: 120, notes: '新年新希望，開始減脂！' },
+                { date: '2026-01-01', weight: 60, bodyFat: 25, muscleMass: 35, visceralFat: 8, calories: 2500, protein: 120, notes: '新年新希望，開始減脂！' },
             ]));
 
             const [workoutLogs, setWorkoutLogs] = useState(() => getStoredItem('fitTrack_workouts_v2', {}));
