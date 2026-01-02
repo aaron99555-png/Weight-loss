@@ -72,6 +72,7 @@
         const AlertCircle = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></IconBase>;
         const Zap = (props) => <IconBase {...props}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></IconBase>;
         const Edit = (props) => <IconBase {...props}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></IconBase>;
+        const RotateCcw = (props) => <IconBase {...props}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></IconBase>;
 
         const DEFAULT_WORKOUTS = [
             {
@@ -127,10 +128,11 @@
 
         // --- 將元件移出 FitTrackApp 外部，避免重複渲染導致失焦 ---
 
-        const Dashboard = ({ todayInput, setTodayInput, handleLogSubmit, saveMessage, currentWeight, bmi, tdee, recommendedCalories, daysLeft, currentDate, setCurrentDate, recommendedProtein, logs, currentBodyFat, currentMuscleMass, currentVisceralFat }) => {
+        const Dashboard = ({ todayInput, setTodayInput, handleLogSubmit, saveMessage, currentWeight, bmi, tdee, recommendedCalories, daysLeft, currentDate, setCurrentDate, recommendedProtein, logs, currentBodyFat, currentMuscleMass, currentVisceralFat, todayStr }) => {
             const todayCalories = todayInput.calories ? parseFloat(todayInput.calories) : 0;
             const caloriePct = Math.min((todayCalories / recommendedCalories) * 100, 100);
             const calorieColor = todayCalories > recommendedCalories ? 'bg-red-500' : 'bg-orange-500';
+            const isEditingPast = currentDate !== todayStr;
 
             return (
                 <div className="space-y-6 animate-fade-in">
@@ -282,24 +284,43 @@
                     </div>
 
                     {/* Quick Log Input */}
-                    <div className="bg-gradient-to-br from-slate-900 to-rose-900 p-6 rounded-xl shadow-xl text-white border border-rose-900/50 relative overflow-hidden">
+                    <div className={`bg-gradient-to-br p-6 rounded-xl shadow-xl text-white border border-rose-900/50 relative overflow-hidden transition-all ${isEditingPast ? 'from-orange-900 to-rose-900 ring-2 ring-orange-400' : 'from-slate-900 to-rose-900'}`}>
                         <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
                             <Flame className="w-32 h-32 text-rose-500" />
                         </div>
                         
                         <div className="flex justify-between items-center mb-4 relative z-10">
                             <h3 className="font-bold text-lg flex items-center gap-2">
-                                <Plus className="w-5 h-5 text-rose-400" />
-                                數據紀錄
+                                {isEditingPast ? (
+                                    <>
+                                        <Edit className="w-5 h-5 text-orange-400" />
+                                        <span className="text-orange-200">編輯紀錄 ({currentDate})</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Plus className="w-5 h-5 text-rose-400" />
+                                        今日戰績紀錄
+                                    </>
+                                )}
                             </h3>
-                            <div className="flex items-center gap-2 bg-black/20 rounded-lg px-2 py-1 border border-white/10">
-                                <Calendar className="w-4 h-4 text-rose-400" />
-                                <input 
-                                    type="date" 
-                                    value={currentDate}
-                                    onChange={(e) => setCurrentDate(e.target.value)}
-                                    className="bg-transparent text-sm text-white font-bold outline-none border-none p-0 w-28 text-right cursor-pointer"
-                                />
+                            <div className="flex items-center gap-2">
+                                {isEditingPast && (
+                                    <button 
+                                        onClick={() => setCurrentDate(todayStr)}
+                                        className="bg-white/10 hover:bg-white/20 text-white text-xs px-2 py-1 rounded flex items-center gap-1 transition-colors"
+                                    >
+                                        <RotateCcw className="w-3 h-3" /> 回今天
+                                    </button>
+                                )}
+                                <div className="flex items-center gap-2 bg-black/20 rounded-lg px-2 py-1 border border-white/10">
+                                    <Calendar className="w-4 h-4 text-rose-400" />
+                                    <input 
+                                        type="date" 
+                                        value={currentDate}
+                                        onChange={(e) => setCurrentDate(e.target.value)}
+                                        className="bg-transparent text-sm text-white font-bold outline-none border-none p-0 w-28 text-right cursor-pointer"
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -376,7 +397,7 @@
                                 />
                             </div>
                             <button type="submit" className="col-span-2 bg-rose-600 hover:bg-rose-500 text-white p-3 rounded-lg transition-colors font-black mt-2 flex justify-center items-center gap-2 shadow-lg shadow-rose-900/50 uppercase tracking-widest text-sm transform active:scale-95 duration-100">
-                                <Save className="w-4 h-4" /> 儲存紀錄 ({currentDate})
+                                <Save className="w-4 h-4" /> {isEditingPast ? `更新紀錄 (${currentDate})` : '儲存今日戰績'}
                             </button>
                             {saveMessage && (
                                 <div className="col-span-2 text-center text-emerald-400 text-sm font-bold animate-pulse">
@@ -553,13 +574,13 @@
                                                 <div className="flex justify-end gap-2">
                                                     <button 
                                                         onClick={() => editLog(log.date)}
-                                                        className="text-slate-300 hover:text-blue-500 transition-colors p-2"
+                                                        className="text-blue-500 hover:text-blue-600 transition-colors p-1.5 bg-blue-50 rounded-lg flex items-center gap-1 font-bold text-xs"
                                                     >
-                                                        <Edit className="w-4 h-4" />
+                                                        <Edit className="w-3.5 h-3.5" /> 修改
                                                     </button>
                                                     <button 
                                                         onClick={() => deleteLog(log.date)}
-                                                        className="text-slate-300 hover:text-rose-500 transition-colors p-2"
+                                                        className="text-rose-400 hover:text-rose-600 transition-colors p-1.5 hover:bg-rose-50 rounded-lg"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
@@ -726,7 +747,18 @@
 
             const [workoutLogs, setWorkoutLogs] = useState(() => getStoredItem('fitTrack_workouts_v2', {}));
 
-            const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
+            // 使用本地時間 (Taiwan/Asia) 來初始化 "今天"，避免時區問題導致日期跳回昨天
+            const getTodayStr = () => {
+                const now = new Date();
+                // 簡單處理：用本地時間的 YYYY-MM-DD
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            const todayStr = useMemo(() => getTodayStr(), []);
+            const [currentDate, setCurrentDate] = useState(todayStr);
             
             const [todayInput, setTodayInput] = useState({
                 weight: '',
@@ -788,7 +820,6 @@
                 }
                 
                 // 2. 否則，找出「小於等於目前選擇日期」的最新一筆紀錄
-                // logs 已經是依照日期排序的 (舊 -> 新)
                 const validLogs = logs.filter(l => l.date <= currentDate && l[field] !== undefined && l[field] !== null && l[field] !== '');
                 
                 if (validLogs.length > 0) {
@@ -941,6 +972,7 @@
                                 currentBodyFat={currentBodyFat}
                                 currentMuscleMass={currentMuscleMass}
                                 currentVisceralFat={currentVisceralFat}
+                                todayStr={todayStr}
                             />
                         )}
                         {activeTab === 'workout' && (
