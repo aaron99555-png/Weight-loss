@@ -73,6 +73,70 @@
         const Zap = (props) => <IconBase {...props}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></IconBase>;
         const Edit = (props) => <IconBase {...props}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></IconBase>;
         const RotateCcw = (props) => <IconBase {...props}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></IconBase>;
+        const PlusCircle = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="16"/><line x1="8" x2="16" y1="12" y2="12"/></IconBase>;
+
+        // --- 常見食物資料庫 (擴充版) ---
+        const COMMON_FOODS = [
+            { category: '主食 (澱粉)', items: [
+                { name: '白飯 (1碗 160g)', cal: 280, pro: 6 },
+                { name: '糙米飯 (1碗 160g)', cal: 232, pro: 5 },
+                { name: '紫米飯 (1碗 160g)', cal: 280, pro: 6 },
+                { name: '地瓜 (中 150g)', cal: 165, pro: 2 },
+                { name: '馬鈴薯 (中 150g)', cal: 110, pro: 3 },
+                { name: '吐司 (1片)', cal: 75, pro: 3 },
+                { name: '貝果 (1個)', cal: 250, pro: 9 },
+                { name: '燕麥片 (40g)', cal: 150, pro: 5 },
+                { name: '冬粉 (1把)', cal: 140, pro: 0 },
+                { name: '陽春麵 (1碗)', cal: 300, pro: 10 },
+                { name: '義大利麵 (熟 200g)', cal: 300, pro: 10 },
+            ]},
+            { category: '優質蛋白質', items: [
+                { name: '水煮蛋 (1顆)', cal: 70, pro: 7 },
+                { name: '茶葉蛋 (1顆)', cal: 75, pro: 7 },
+                { name: '雞胸肉 (100g)', cal: 110, pro: 23 },
+                { name: '雞腿肉 (去皮 100g)', cal: 160, pro: 20 },
+                { name: '牛腱 (100g)', cal: 140, pro: 20 },
+                { name: '豬里肌 (100g)', cal: 180, pro: 20 },
+                { name: '煎鮭魚 (100g)', cal: 200, pro: 20 },
+                { name: '台灣鯛/吳郭魚 (100g)', cal: 100, pro: 20 },
+                { name: '白蝦 (10隻)', cal: 100, pro: 22 },
+                { name: '板豆腐 (半盒 150g)', cal: 130, pro: 12 },
+                { name: '嫩豆腐 (半盒 150g)', cal: 80, pro: 8 },
+                { name: '無糖豆漿 (400ml)', cal: 135, pro: 14 },
+                { name: '高蛋白粉 (1份)', cal: 120, pro: 25 },
+                { name: '希臘優格 (100g)', cal: 60, pro: 10 },
+            ]},
+            { category: '蔬菜/水果', items: [
+                { name: '燙青菜 (1份)', cal: 40, pro: 2 },
+                { name: '生菜沙拉 (不含醬)', cal: 50, pro: 2 },
+                { name: '香蕉 (1根)', cal: 90, pro: 1 },
+                { name: '蘋果 (1顆)', cal: 60, pro: 0 },
+                { name: '芭樂 (1顆)', cal: 120, pro: 2 },
+                { name: '奇異果 (1顆)', cal: 45, pro: 1 },
+                { name: '小番茄 (20顆)', cal: 60, pro: 1 },
+            ]},
+            { category: '超商/外食/早餐', items: [
+                { name: '鮪魚御飯糰', cal: 200, pro: 5 },
+                { name: '肉鬆御飯糰', cal: 220, pro: 4 },
+                { name: '雞肉飯便當', cal: 700, pro: 25 },
+                { name: '排骨便當', cal: 850, pro: 25 },
+                { name: '牛肉麵 (紅燒)', cal: 800, pro: 30 },
+                { name: '水餃 (10顆)', cal: 500, pro: 20 },
+                { name: '蛋餅 (原味)', cal: 260, pro: 8 },
+                { name: '漢堡蛋', cal: 450, pro: 15 },
+                { name: '三明治 (總匯)', cal: 350, pro: 12 },
+                { name: '麥當勞大麥克', cal: 530, pro: 24 },
+                { name: '拿鐵 (中杯)', cal: 120, pro: 5 },
+                { name: '美式咖啡', cal: 10, pro: 0 },
+            ]},
+            { category: '點心/零食', items: [
+                { name: '無調味堅果 (30g)', cal: 180, pro: 5 },
+                { name: '黑巧克力 (1片)', cal: 50, pro: 1 },
+                { name: '雞蛋糕 (1份)', cal: 300, pro: 6 },
+                { name: '紅豆餅 (1個)', cal: 200, pro: 4 },
+                { name: '洋芋片 (1包)', cal: 400, pro: 4 },
+            ]}
+        ];
 
         const DEFAULT_WORKOUTS = [
             {
@@ -133,6 +197,39 @@
             const caloriePct = Math.min((todayCalories / recommendedCalories) * 100, 100);
             const calorieColor = todayCalories > recommendedCalories ? 'bg-red-500' : 'bg-orange-500';
             const isEditingPast = currentDate !== todayStr;
+
+            const handleAddFood = (e) => {
+                const selectedValue = e.target.value;
+                if (!selectedValue) return;
+
+                // 找出選中的食物資料
+                let foundFood = null;
+                for (const cat of COMMON_FOODS) {
+                    const item = cat.items.find(i => i.name === selectedValue);
+                    if (item) {
+                        foundFood = item;
+                        break;
+                    }
+                }
+
+                if (foundFood) {
+                    setTodayInput(prev => {
+                        const currentCal = parseFloat(prev.calories) || 0;
+                        const currentPro = parseFloat(prev.protein) || 0;
+                        const currentNotes = prev.notes || "";
+                        
+                        return {
+                            ...prev,
+                            calories: (currentCal + foundFood.cal).toString(),
+                            protein: (currentPro + foundFood.pro).toString(),
+                            notes: currentNotes ? `${currentNotes} +${foundFood.name}` : `+${foundFood.name}`
+                        };
+                    });
+                }
+                
+                // 重置 select
+                e.target.value = "";
+            };
 
             return (
                 <div className="space-y-6 animate-fade-in">
@@ -320,6 +417,31 @@
                                         onChange={(e) => setCurrentDate(e.target.value)}
                                         className="bg-transparent text-sm text-white font-bold outline-none border-none p-0 w-28 text-right cursor-pointer"
                                     />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Food Selector */}
+                        <div className="mb-4 relative z-10">
+                            <div className="relative">
+                                <select 
+                                    onChange={handleAddFood} 
+                                    defaultValue=""
+                                    className="w-full bg-black/30 border border-white/20 rounded-lg pl-3 pr-8 py-2 text-white text-sm focus:outline-none focus:border-rose-500 appearance-none cursor-pointer hover:bg-black/40 transition-colors"
+                                >
+                                    <option value="" disabled>➕ 快速加入常見食物 (自動累加熱量)</option>
+                                    {COMMON_FOODS.map((cat, idx) => (
+                                        <optgroup key={idx} label={cat.category} className="text-slate-900">
+                                            {cat.items.map((item, i) => (
+                                                <option key={i} value={item.name} className="text-slate-900">
+                                                    {item.name} - {item.cal}大卡 / {item.pro}g 蛋白
+                                                </option>
+                                            ))}
+                                        </optgroup>
+                                    ))}
+                                </select>
+                                <div className="absolute right-3 top-2.5 pointer-events-none text-white/50">
+                                    <PlusCircle className="w-4 h-4" />
                                 </div>
                             </div>
                         </div>
@@ -574,7 +696,7 @@
                                                 <div className="flex justify-end gap-2">
                                                     <button 
                                                         onClick={() => editLog(log.date)}
-                                                        className="text-blue-500 hover:text-blue-600 transition-colors p-1.5 bg-blue-50 rounded-lg flex items-center gap-1 font-bold text-xs"
+                                                        className="bg-blue-600 hover:bg-blue-700 text-white transition-colors px-3 py-1.5 rounded-lg flex items-center gap-1 font-bold text-xs shadow-sm"
                                                     >
                                                         <Edit className="w-3.5 h-3.5" /> 修改
                                                     </button>
