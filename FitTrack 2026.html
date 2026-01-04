@@ -96,8 +96,57 @@
             "不要小看每天的微小積累。", "最好的整容是減肥，最好的保養是運動。", "你必須非常努力，才能看起來毫不費力。", "這一年，給自己一個交代。"
         ];
 
-        // --- 常見食物資料庫 (完整擴充版) ---
+        // --- 常見食物資料庫 (超級擴充版 - 新增關東煮、雞肉、牛排、自助餐、堅果) ---
         const COMMON_FOODS = [
+            { category: '超商/關東煮', items: [
+                { name: '白蘿蔔 (1塊)', cal: 15, pro: 0.5 },
+                { name: '米血糕 (1支)', cal: 130, pro: 4 },
+                { name: '黑輪 (1支)', cal: 90, pro: 4 },
+                { name: '貢丸 (1顆)', cal: 50, pro: 3 },
+                { name: '魚豆腐 (1塊)', cal: 80, pro: 6 },
+                { name: '黃金魚蛋 (1串)', cal: 50, pro: 5 },
+                { name: '茭白筍 (1支)', cal: 20, pro: 1 },
+                { name: '高麗菜捲 (1個)', cal: 70, pro: 4 },
+                { name: '玉米 (1塊)', cal: 70, pro: 2 },
+                { name: '關東煮湯 (1碗)', cal: 30, pro: 1 },
+                { name: '科學麵 (1包)', cal: 195, pro: 4 },
+            ]},
+             { category: '超商/減脂雞肉', items: [
+                { name: '原味雞胸肉 (1包)', cal: 120, pro: 23 },
+                { name: '蒜味/黑胡椒雞胸 (1包)', cal: 130, pro: 23 },
+                { name: '麻辣雞胸肉 (1包)', cal: 140, pro: 22 },
+                { name: '舒肥雞胸肉 (1包)', cal: 120, pro: 24 },
+                { name: '鹽水雞胸肉 (1包)', cal: 115, pro: 23 },
+                { name: '紐奧良風味雞胸 (1包)', cal: 135, pro: 22 },
+                { name: '雞胸肉沙拉 (1份)', cal: 180, pro: 15 },
+                { name: '茶葉蛋 (1顆)', cal: 75, pro: 7 },
+            ]},
+            { category: '牛排/鐵板燒', items: [
+                { name: '沙朗牛排 (主餐 8oz)', cal: 500, pro: 40 },
+                { name: '菲力牛排 (主餐 6oz)', cal: 300, pro: 35 },
+                { name: '雞腿排 (帶皮/主餐)', cal: 450, pro: 30 },
+                { name: '厚切豬排 (主餐)', cal: 450, pro: 35 },
+                { name: '鐵板麵 (含醬)', cal: 350, pro: 8 },
+                { name: '荷包蛋 (煎)', cal: 120, pro: 7 },
+                { name: '酥皮濃湯 (1碗)', cal: 450, pro: 8 },
+                { name: '玉米濃湯 (1碗)', cal: 150, pro: 4 },
+                { name: '餐包 (1個)', cal: 100, pro: 2 },
+                { name: '紅茶 (1杯)', cal: 100, pro: 0 },
+            ]},
+             { category: '自助餐/便當菜 (1份/匙)', items: [
+                { name: '炸排骨 (1片)', cal: 400, pro: 20 },
+                { name: '滷雞腿 (1支)', cal: 300, pro: 25 },
+                { name: '炸雞腿 (1支)', cal: 500, pro: 25 },
+                { name: '清蒸魚 (1片)', cal: 120, pro: 18 },
+                { name: '煎魚 (1片)', cal: 200, pro: 18 },
+                { name: '蔥爆牛肉 (1份)', cal: 250, pro: 15 },
+                { name: '番茄炒蛋 (1份)', cal: 150, pro: 8 },
+                { name: '麻婆豆腐 (1份)', cal: 220, pro: 10 },
+                { name: '炒高麗菜 (1份)', cal: 80, pro: 2 },
+                { name: '炒菠菜 (1份)', cal: 80, pro: 2 },
+                { name: '滷蛋 (1顆)', cal: 75, pro: 7 },
+                { name: '白飯 (1碗)', cal: 280, pro: 6 },
+            ]},
             { category: '早餐推薦', items: [
                 { name: '鮪魚蛋餅', cal: 350, pro: 12 },
                 { name: '玉米蛋餅', cal: 300, pro: 8 },
@@ -110,30 +159,9 @@
                 { name: '鐵板麵 (黑胡椒/蘑菇)', cal: 450, pro: 10 },
                 { name: '蘿蔔糕 (3片)', cal: 300, pro: 5 },
                 { name: '荷包蛋 (1顆)', cal: 120, pro: 7 },
-                { name: '蔥抓餅 (原味)', cal: 400, pro: 8 },
-                { name: '飯糰 (紫米/傳統)', cal: 500, pro: 10 },
-                { name: '燒餅油條', cal: 550, pro: 8 },
                 { name: '豆漿 (有糖 400ml)', cal: 240, pro: 14 },
                 { name: '無糖豆漿 (400ml)', cal: 135, pro: 14 },
                 { name: '米漿 (400ml)', cal: 250, pro: 3 },
-            ]},
-            { category: '正餐 (便當/麵食)', items: [
-                { name: '雞肉飯便當', cal: 700, pro: 25 },
-                { name: '滷雞腿便當', cal: 800, pro: 28 },
-                { name: '炸雞腿便當', cal: 950, pro: 28 },
-                { name: '排骨便當 (炸)', cal: 900, pro: 25 },
-                { name: '排骨便當 (滷)', cal: 800, pro: 25 },
-                { name: '控肉便當', cal: 900, pro: 20 },
-                { name: '三寶飯', cal: 950, pro: 30 },
-                { name: '牛肉麵 (紅燒)', cal: 800, pro: 30 },
-                { name: '牛肉麵 (清燉)', cal: 600, pro: 30 },
-                { name: '陽春麵 (乾)', cal: 400, pro: 8 },
-                { name: '麻醬麵', cal: 550, pro: 10 },
-                { name: '炸醬麵', cal: 650, pro: 15 },
-                { name: '水餃 (10顆)', cal: 500, pro: 20 },
-                { name: '鍋貼 (10顆)', cal: 750, pro: 20 },
-                { name: '炒飯 (肉絲)', cal: 700, pro: 15 },
-                { name: '咖哩雞肉飯', cal: 750, pro: 20 },
             ]},
             { category: '湯品/羹湯', items: [
                 { name: '貢丸湯', cal: 150, pro: 8 },
@@ -147,16 +175,6 @@
                 { name: '味噌湯', cal: 60, pro: 4 },
                 { name: '魷魚羹湯', cal: 350, pro: 15 },
                 { name: '肉羹湯', cal: 380, pro: 12 },
-            ]},
-            { category: '冬令進補/鍋物', items: [
-                { name: '羊肉爐 (1人份)', cal: 800, pro: 40 },
-                { name: '薑母鴨 (1人份)', cal: 900, pro: 35 },
-                { name: '麻油雞 (1碗)', cal: 450, pro: 25 },
-                { name: '藥燉排骨 (1碗)', cal: 500, pro: 30 },
-                { name: '臭臭鍋 (1鍋)', cal: 800, pro: 30 },
-                { name: '海鮮豆腐鍋 (1鍋)', cal: 600, pro: 35 },
-                { name: '麻辣鍋 (1人份)', cal: 1200, pro: 40 },
-                { name: '壽喜燒 (1人份)', cal: 1000, pro: 40 },
             ]},
             { category: '麥當勞/速食', items: [
                 { name: '大麥克', cal: 530, pro: 24 },
@@ -174,50 +192,13 @@
                 { name: '玉米湯 (小)', cal: 90, pro: 2 },
                 { name: '肯德基咔啦脆雞 (1塊)', cal: 236, pro: 16 },
                 { name: '肯德基蛋塔 (1顆)', cal: 182, pro: 2 },
-                { name: '摩斯漢堡 (原味)', cal: 400, pro: 15 },
-                { name: '潛艇堡 (6吋火雞胸)', cal: 350, pro: 20 },
             ]},
-            { category: '消夜/炸物/小吃', items: [
-                { name: '鹽酥雞 (1份)', cal: 500, pro: 30 },
-                { name: '炸雞排 (1片)', cal: 650, pro: 40 },
-                { name: '甜不辣 (1份)', cal: 300, pro: 5 },
-                { name: '米血糕 (1支)', cal: 300, pro: 5 },
-                { name: '四季豆 (炸 1份)', cal: 150, pro: 2 },
-                { name: '地瓜球 (1份)', cal: 400, pro: 2 },
-                { name: '蚵仔煎', cal: 500, pro: 15 },
-                { name: '大腸包小腸', cal: 550, pro: 15 },
-                { name: '滷味拼盤 (1人份)', cal: 400, pro: 25 },
-                { name: '泡麵 (炸醬麵)', cal: 500, pro: 8 },
-                { name: '泡麵 (統一肉燥)', cal: 400, pro: 7 },
-            ]},
-             { category: '飲料/手搖 (半糖)', items: [
-                { name: '珍珠奶茶 (700ml)', cal: 650, pro: 2 },
-                { name: '紅茶拿鐵/鮮奶茶', cal: 250, pro: 6 },
-                { name: '純茶類 (無糖)', cal: 0, pro: 0 },
-                { name: '多多綠茶', cal: 350, pro: 2 },
-                { name: '水果茶', cal: 300, pro: 0 },
-                { name: '拿鐵咖啡 (中)', cal: 120, pro: 5 },
-                { name: '美式咖啡', cal: 10, pro: 0 },
-                { name: '可樂 (330ml)', cal: 140, pro: 0 },
-                { name: '豆漿 (有糖 400ml)', cal: 240, pro: 14 },
-                { name: '米漿 (400ml)', cal: 250, pro: 3 },
-            ]},
-            { category: '健康/自煮 (每100g)', items: [
-                { name: '白飯 (1碗 160g)', cal: 280, pro: 6 },
-                { name: '糙米飯 (1碗 160g)', cal: 232, pro: 5 },
-                { name: '地瓜 (中 150g)', cal: 165, pro: 2 },
-                { name: '雞胸肉 (100g)', cal: 110, pro: 23 },
-                { name: '雞腿肉 (去皮 100g)', cal: 160, pro: 20 },
-                { name: '牛腱 (100g)', cal: 140, pro: 20 },
-                { name: '煎鮭魚 (100g)', cal: 200, pro: 20 },
-                { name: '台灣鯛 (100g)', cal: 100, pro: 20 },
-                { name: '水煮蛋 (1顆)', cal: 70, pro: 7 },
-                { name: '板豆腐 (半盒)', cal: 130, pro: 12 },
-                { name: '高蛋白粉 (1份)', cal: 120, pro: 25 },
-                { name: '燙青菜 (1份)', cal: 40, pro: 2 },
-                { name: '蘋果 (1顆)', cal: 60, pro: 0 },
-                { name: '香蕉 (1根)', cal: 90, pro: 1 },
-                { name: '奇異果 (1顆)', cal: 45, pro: 1 },
+            { category: '超商/堅果 (1包/份)', items: [
+                { name: '綜合堅果 (小包 30g)', cal: 180, pro: 5 },
+                { name: '杏仁果 (30g)', cal: 170, pro: 6 },
+                { name: '腰果 (30g)', cal: 165, pro: 5 },
+                { name: '核桃 (30g)', cal: 190, pro: 4 },
+                { name: '黑巧克力 (1片)', cal: 50, pro: 1 },
             ]}
         ];
 
@@ -760,7 +741,7 @@
                                 <button 
                                     type="button"
                                     onClick={handleAddCustomItem}
-                                    className="bg-gradient-to-r from-red-600 to-orange-600 text-white px-3 py-1 rounded text-sm font-bold hover:from-red-500 hover:to-orange-500 transition-colors shrink-0"
+                                    className="bg-orange-500 text-white px-3 py-1 rounded text-sm font-bold hover:bg-orange-600 transition-colors shrink-0"
                                 >
                                     加入
                                 </button>
@@ -802,7 +783,7 @@
                                 />
                             </div>
 
-                            <button type="submit" className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white p-3 rounded-lg transition-all font-bold flex justify-center items-center gap-2 shadow-lg shadow-red-200 uppercase tracking-widest text-sm transform active:scale-95 duration-100">
+                            <button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg transition-colors font-bold flex justify-center items-center gap-2 shadow-lg shadow-orange-200">
                                 <Save className="w-4 h-4" /> {isEditingPast ? '更新飲食紀錄' : '儲存飲食紀錄'}
                             </button>
                             
@@ -825,7 +806,7 @@
                 <div className="space-y-4 animate-fade-in pb-20">
                     <div className="flex justify-between items-center">
                         <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                            <Dumbbell className="w-6 h-6 text-red-600" />
+                            <Dumbbell className="w-6 h-6 text-rose-600" />
                             今日菜單
                         </h2>
                         <div className="flex items-center gap-2 bg-white rounded-lg px-3 py-1 border border-slate-200 shadow-sm">
@@ -847,7 +828,7 @@
                                 onClick={() => setSelectedPlanId(plan.id)}
                                 className={`px-5 py-2.5 rounded-lg whitespace-nowrap text-sm font-bold transition-all shadow-sm border transform active:scale-95 duration-100 ${
                                     selectedPlanId === plan.id 
-                                    ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white border-red-600 shadow-red-200' 
+                                    ? 'bg-rose-600 text-white border-rose-600 shadow-rose-200' 
                                     : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
                                 }`}
                             >
@@ -863,18 +844,18 @@
                             const isDone = logData.completed;
 
                             return (
-                                <div key={idx} className={`bg-white rounded-xl shadow-sm border-l-4 transition-all ${isDone ? 'border-l-red-500 border-red-100 bg-red-50/20' : 'border-l-slate-200 border-slate-100'}`}>
+                                <div key={idx} className={`bg-white rounded-xl shadow-sm border-l-4 transition-all ${isDone ? 'border-l-rose-500 border-rose-100 bg-rose-50/20' : 'border-l-slate-200 border-slate-100'}`}>
                                     {/* Header Row */}
                                     <div className="p-4 flex items-start justify-between">
                                         <div className="flex items-center gap-3">
                                             <button 
                                                 onClick={() => toggleExerciseCompletion(selectedPlanId, idx)}
-                                                className={`transition-colors transform active:scale-90 duration-100 ${isDone ? 'text-red-500' : 'text-slate-300 hover:text-red-300'}`}
+                                                className={`transition-colors transform active:scale-90 duration-100 ${isDone ? 'text-rose-500' : 'text-slate-300 hover:text-rose-300'}`}
                                             >
-                                                {isDone ? <CheckCircle2 className="w-6 h-6 fill-red-100" /> : <Circle className="w-6 h-6" />}
+                                                {isDone ? <CheckCircle2 className="w-6 h-6 fill-rose-100" /> : <Circle className="w-6 h-6" />}
                                             </button>
                                             <div>
-                                                <h4 className={`font-bold ${isDone ? 'text-red-900 line-through decoration-red-400' : 'text-slate-800'}`}>{ex.name}</h4>
+                                                <h4 className={`font-bold ${isDone ? 'text-rose-900 line-through decoration-rose-400' : 'text-slate-800'}`}>{ex.name}</h4>
                                                 <p className="text-xs font-medium text-slate-500 bg-slate-100 inline-block px-1.5 py-0.5 rounded mt-1">
                                                     目標: {ex.defaultSets} {isCardio ? '' : '組'} {isCardio ? '' : 'x'} {ex.defaultReps}
                                                 </p>
@@ -891,9 +872,9 @@
                                                 placeholder=""
                                                 value={isCardio ? (logData.duration || '') : (logData.weight || '')}
                                                 onChange={(e) => updateExerciseLog(selectedPlanId, idx, isCardio ? 'duration' : 'weight', e.target.value)}
-                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-3 pr-8 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-red-500 focus:bg-white outline-none transition-all"
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-3 pr-8 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-rose-500 focus:bg-white outline-none transition-all"
                                             />
-                                            <span className="absolute right-3 top-2 text-xs text-slate-400 font-bold group-focus-within:text-red-500 pointer-events-none flex items-center gap-1">
+                                            <span className="absolute right-3 top-2 text-xs text-slate-400 font-bold group-focus-within:text-rose-500 pointer-events-none flex items-center gap-1">
                                                 {isCardio ? <Timer className="w-3 h-3"/> : <Scale className="w-3 h-3"/>}
                                                 {isCardio ? 'min' : 'kg'}
                                             </span>
@@ -906,9 +887,9 @@
                                                 placeholder=""
                                                 value={isCardio ? (logData.distance || '') : (logData.reps || '')}
                                                 onChange={(e) => updateExerciseLog(selectedPlanId, idx, isCardio ? 'distance' : 'reps', e.target.value)}
-                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-3 pr-8 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-red-500 focus:bg-white outline-none transition-all"
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-3 pr-8 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-rose-500 focus:bg-white outline-none transition-all"
                                             />
-                                            <span className="absolute right-3 top-2 text-xs text-slate-400 font-bold group-focus-within:text-red-500 pointer-events-none flex items-center gap-1">
+                                            <span className="absolute right-3 top-2 text-xs text-slate-400 font-bold group-focus-within:text-rose-500 pointer-events-none flex items-center gap-1">
                                                 {isCardio ? <Footprints className="w-3 h-3"/> : <Dumbbell className="w-3 h-3"/>}
                                                 {isCardio ? 'km' : 'reps'}
                                             </span>
@@ -920,7 +901,7 @@
                     </div>
 
                     <div className="bg-slate-900 p-4 rounded-lg text-sm text-slate-300 flex gap-3 items-start border border-slate-800 shadow-lg">
-                        <div className="mt-0.5 p-1 bg-red-600 rounded text-white"><Dumbbell className="w-3 h-3"/></div>
+                        <div className="mt-0.5 p-1 bg-rose-600 rounded text-white"><Dumbbell className="w-3 h-3"/></div>
                         <div>
                             <p className="font-bold text-white mb-1">
                                 {isCardio ? '🔥 有氧小知識 (Cardio Tips)' : '💪 漸進式負荷 (Progressive Overload)'}
@@ -940,7 +921,7 @@
             return (
                 <div className="animate-fade-in pb-20">
                     <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <History className="w-6 h-6 text-red-600" />
+                        <History className="w-6 h-6 text-rose-600" />
                         戰鬥歷程
                     </h2>
                     <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
@@ -956,7 +937,7 @@
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
                                     {[...logs].reverse().map((log, idx) => (
-                                        <tr key={idx} className="hover:bg-red-50/30 transition-colors">
+                                        <tr key={idx} className="hover:bg-rose-50/30 transition-colors">
                                             <td className="px-3 py-3 font-bold text-slate-700 whitespace-nowrap align-top">
                                                 <div className="text-xs text-slate-400 font-normal">{log.date.split('-')[0]}</div>
                                                 <div className="text-sm">{log.date.slice(5)}</div>
@@ -989,7 +970,7 @@
                                                     </button>
                                                     <button 
                                                         onClick={() => deleteLog(log.date)}
-                                                        className="text-red-400 hover:text-red-600 transition-colors p-1"
+                                                        className="text-rose-400 hover:text-rose-600 transition-colors p-1"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
@@ -1016,7 +997,7 @@
             return (
                 <div className="animate-fade-in pb-20">
                     <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <Settings className="w-6 h-6 text-red-600" />
+                        <Settings className="w-6 h-6 text-rose-600" />
                         個人檔案與目標
                     </h2>
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 space-y-6">
@@ -1033,7 +1014,7 @@
                                         type="number" 
                                         value={userProfile.height}
                                         onChange={(e) => setUserProfile({...userProfile, height: parseFloat(e.target.value)})}
-                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-red-500 outline-none font-medium"
+                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-rose-500 outline-none font-medium"
                                     />
                                 </div>
                                 <div>
@@ -1042,7 +1023,7 @@
                                         type="number" 
                                         value={userProfile.age}
                                         onChange={(e) => setUserProfile({...userProfile, age: parseFloat(e.target.value)})}
-                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-red-500 outline-none font-medium"
+                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-rose-500 outline-none font-medium"
                                     />
                                 </div>
                                 <div>
@@ -1050,7 +1031,7 @@
                                     <select 
                                         value={userProfile.gender}
                                         onChange={(e) => setUserProfile({...userProfile, gender: e.target.value})}
-                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-red-500 outline-none bg-white font-medium"
+                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-rose-500 outline-none bg-white font-medium"
                                     >
                                         <option value="male">男</option>
                                         <option value="female">女</option>
@@ -1061,7 +1042,7 @@
                                     <select 
                                         value={userProfile.activityLevel}
                                         onChange={(e) => setUserProfile({...userProfile, activityLevel: parseFloat(e.target.value)})}
-                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-red-500 outline-none bg-white text-sm font-medium"
+                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-rose-500 outline-none bg-white text-sm font-medium"
                                     >
                                         <option value="1.2">久坐 (沒運動)</option>
                                         <option value="1.375">輕度 (每週1-3次)</option>
@@ -1085,7 +1066,7 @@
                                         type="number" 
                                         value={userProfile.startWeight}
                                         onChange={(e) => setUserProfile({...userProfile, startWeight: parseFloat(e.target.value)})}
-                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-red-500 outline-none font-medium"
+                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-rose-500 outline-none font-medium"
                                     />
                                 </div>
                                 <div>
@@ -1094,7 +1075,7 @@
                                         type="number" 
                                         value={userProfile.targetWeight}
                                         onChange={(e) => setUserProfile({...userProfile, targetWeight: parseFloat(e.target.value)})}
-                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-red-500 outline-none font-medium"
+                                        className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-rose-500 outline-none font-medium"
                                     />
                                 </div>
                             </div>
@@ -1104,7 +1085,7 @@
                                     type="date" 
                                     value={userProfile.targetDate}
                                     onChange={(e) => setUserProfile({...userProfile, targetDate: e.target.value})}
-                                    className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-red-500 outline-none font-medium"
+                                    className="w-full border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-rose-500 outline-none font-medium"
                                 />
                             </div>
                         </div>
@@ -1358,7 +1339,7 @@
                 <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-24 md:pb-0">
                     
                     {/* Header */}
-                    <header className="bg-gradient-to-r from-red-800 via-red-600 to-orange-500 shadow-lg sticky top-0 z-30">
+                    <header className="bg-gradient-to-r from-rose-700 to-orange-600 shadow-lg sticky top-0 z-30">
                         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
@@ -1450,35 +1431,35 @@
                         <div className="flex justify-around items-center h-16">
                             <button 
                                 onClick={() => setActiveTab('dashboard')}
-                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'dashboard' ? 'text-red-600' : 'text-slate-400 hover:text-slate-600'}`}
+                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'dashboard' ? 'text-rose-600' : 'text-slate-400 hover:text-slate-600'}`}
                             >
                                 <LayoutDashboard className="w-5 h-5" />
                                 <span className="text-[10px] font-bold">總覽</span>
                             </button>
                             <button 
                                 onClick={() => setActiveTab('diet')}
-                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'diet' ? 'text-red-600' : 'text-slate-400 hover:text-slate-600'}`}
+                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'diet' ? 'text-rose-600' : 'text-slate-400 hover:text-slate-600'}`}
                             >
                                 <Utensils className="w-5 h-5" />
                                 <span className="text-[10px] font-bold">飲食</span>
                             </button>
                             <button 
                                 onClick={() => setActiveTab('workout')}
-                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'workout' ? 'text-red-600' : 'text-slate-400 hover:text-slate-600'}`}
+                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'workout' ? 'text-rose-600' : 'text-slate-400 hover:text-slate-600'}`}
                             >
                                 <Dumbbell className="w-5 h-5" />
                                 <span className="text-[10px] font-bold">運動</span>
                             </button>
                             <button 
                                 onClick={() => setActiveTab('history')}
-                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'history' ? 'text-red-600' : 'text-slate-400 hover:text-slate-600'}`}
+                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'history' ? 'text-rose-600' : 'text-slate-400 hover:text-slate-600'}`}
                             >
                                 <History className="w-5 h-5" />
                                 <span className="text-[10px] font-bold">紀錄</span>
                             </button>
                             <button 
                                 onClick={() => setActiveTab('settings')}
-                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'settings' ? 'text-red-600' : 'text-slate-400 hover:text-slate-600'}`}
+                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'settings' ? 'text-rose-600' : 'text-slate-400 hover:text-slate-600'}`}
                             >
                                 <Settings className="w-5 h-5" />
                                 <span className="text-[10px] font-bold">設定</span>
