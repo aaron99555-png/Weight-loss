@@ -573,6 +573,17 @@
                                             name="體重 (kg)"
                                             activeDot={{r: 5, strokeWidth: 0, fill: '#dc2626'}}
                                         />
+
+                                        {/* Muscle Line */}
+                                        <Line 
+                                            yAxisId="left" 
+                                            type="monotone" 
+                                            dataKey="muscleMass" 
+                                            stroke="#0ea5e9" 
+                                            strokeWidth={3} 
+                                            dot={{r: 4, fill: '#0ea5e9'}} 
+                                            name="肌肉 (kg)" 
+                                        />
                                         
                                         {/* Calories Bar */}
                                         <Bar 
