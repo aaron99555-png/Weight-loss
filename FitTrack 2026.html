@@ -78,6 +78,8 @@
         const PlusCircle = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="16"/><line x1="8" x2="16" y1="12" y2="12"/></IconBase>;
         const Search = (props) => <IconBase {...props}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></IconBase>;
         const Sparkles = (props) => <IconBase {...props}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M9 3v4"/><path d="M3 5h4"/><path d="M3 9h4"/></IconBase>;
+        const HeartPulse = (props) => <IconBase {...props}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5 9.04 15.2a1 1 0 0 0 .96 1.25h0a1 1 0 0 0 .96-.75L12 11l1.04 3.7a1 1 0 0 0 .96.75h0a1 1 0 0 0 .96-1.25L12 5Z"/></IconBase>;
+
 
         // --- 勵志語錄 (52句) ---
         const INSPIRATIONAL_QUOTES = [
@@ -96,7 +98,7 @@
             "不要小看每天的微小積累。", "最好的整容是減肥，最好的保養是運動。", "你必須非常努力，才能看起來毫不費力。", "這一年，給自己一個交代。"
         ];
 
-        // --- 常見食物資料庫 (超級夜市版) ---
+        // --- 常見食物資料庫 (完整擴充版) ---
         const COMMON_FOODS = [
             { category: '早餐推薦', items: [
                 { name: '鮪魚蛋餅', cal: 350, pro: 12 },
@@ -118,103 +120,39 @@
                 { name: '無糖豆漿 (400ml)', cal: 135, pro: 14 },
                 { name: '米漿 (400ml)', cal: 250, pro: 3 },
             ]},
-            { category: '正餐 (便當/米食)', items: [
+            { category: '各式炒飯/燴飯', items: [
+                { name: '蛋炒飯 (1份)', cal: 600, pro: 12 },
+                { name: '肉絲炒飯 (1份)', cal: 700, pro: 18 },
+                { name: '蝦仁炒飯 (1份)', cal: 650, pro: 20 },
+                { name: '牛肉炒飯 (1份)', cal: 750, pro: 22 },
+                { name: '羊肉炒飯 (1份)', cal: 750, pro: 22 },
+                { name: '鮭魚炒飯 (1份)', cal: 700, pro: 20 },
+                { name: '香腸炒飯 (1份)', cal: 800, pro: 15 },
+                { name: '鹹魚雞粒炒飯 (1份)', cal: 750, pro: 25 },
+                { name: '揚州炒飯 (1份)', cal: 700, pro: 18 },
+                { name: '泡菜炒飯 (1份)', cal: 600, pro: 12 },
+                { name: '茄汁蛋炒飯 (1份)', cal: 600, pro: 12 },
+                { name: '鳳梨炒飯 (1份)', cal: 650, pro: 12 },
+                { name: '沙茶牛肉燴飯 (1份)', cal: 800, pro: 25 },
+                { name: '滑蛋蝦仁燴飯 (1份)', cal: 750, pro: 20 },
+            ]},
+            { category: '正餐 (便當/麵食)', items: [
                 { name: '雞肉飯便當', cal: 700, pro: 25 },
                 { name: '滷雞腿便當', cal: 800, pro: 28 },
                 { name: '炸雞腿便當', cal: 950, pro: 28 },
                 { name: '排骨便當 (炸)', cal: 900, pro: 25 },
                 { name: '排骨便當 (滷)', cal: 800, pro: 25 },
                 { name: '控肉便當', cal: 900, pro: 20 },
-                { name: '魚排便當', cal: 750, pro: 20 },
                 { name: '三寶飯', cal: 950, pro: 30 },
-                { name: '炒飯 (肉絲)', cal: 700, pro: 15 },
-                { name: '咖哩雞肉飯', cal: 750, pro: 20 },
-                { name: '牛丼 (飯)', cal: 750, pro: 22 },
-                { name: '親子丼', cal: 650, pro: 25 },
-                { name: '滷肉飯 (小)', cal: 400, pro: 10 },
-                { name: '雞肉飯 (小)', cal: 350, pro: 12 },
-                { name: '筒仔米糕', cal: 400, pro: 8 },
-                { name: '碗粿', cal: 400, pro: 6 },
-            ]},
-            { category: '正餐 (麵食/水餃/粥)', items: [
                 { name: '牛肉麵 (紅燒)', cal: 800, pro: 30 },
                 { name: '牛肉麵 (清燉)', cal: 600, pro: 30 },
                 { name: '陽春麵 (乾)', cal: 400, pro: 8 },
                 { name: '麻醬麵', cal: 550, pro: 10 },
                 { name: '炸醬麵', cal: 650, pro: 15 },
-                { name: '餛飩麵', cal: 450, pro: 15 },
-                { name: '鍋燒意麵', cal: 500, pro: 15 },
-                { name: '炒米粉', cal: 450, pro: 8 },
-                { name: '肉羹麵/飯', cal: 450, pro: 15 },
                 { name: '水餃 (10顆)', cal: 500, pro: 20 },
                 { name: '鍋貼 (10顆)', cal: 750, pro: 20 },
-                { name: '小籠包 (8顆)', cal: 500, pro: 18 },
-                { name: '蒸餃 (8顆)', cal: 400, pro: 15 },
-                { name: '皮蛋瘦肉粥', cal: 350, pro: 12 },
-                { name: '廣東粥', cal: 400, pro: 15 },
-            ]},
-            { category: '夜市/小吃/點心', items: [
-                { name: '臭豆腐 (炸 1份)', cal: 500, pro: 15 },
-                { name: '臭豆腐 (蒸/麻辣 1份)', cal: 300, pro: 12 },
-                { name: '蚵仔煎', cal: 500, pro: 15 },
-                { name: '大腸包小腸', cal: 550, pro: 15 },
-                { name: '蚵仔麵線 (小)', cal: 300, pro: 8 },
-                { name: '大腸麵線 (小)', cal: 350, pro: 10 },
-                { name: '肉圓 (炸 1顆)', cal: 350, pro: 6 },
-                { name: '肉圓 (蒸 1顆)', cal: 250, pro: 6 },
-                { name: '刈包', cal: 350, pro: 10 },
-                { name: '潤餅', cal: 350, pro: 10 },
-                { name: '胡椒餅 (1個)', cal: 350, pro: 10 },
-                { name: '蔥油餅 (1張)', cal: 400, pro: 6 },
-                { name: '棺材板', cal: 600, pro: 15 },
-                { name: '生炒花枝 (1碗)', cal: 250, pro: 15 },
-                { name: '營養三明治', cal: 450, pro: 8 },
-                { name: '章魚燒 (1盒 6顆)', cal: 350, pro: 12 },
-                { name: '地瓜球 (1份)', cal: 400, pro: 2 },
-                { name: '炸銀絲卷 (1條)', cal: 300, pro: 5 },
-                { name: '車輪餅 (奶油/紅豆)', cal: 200, pro: 4 },
-                { name: '雞蛋糕 (1份)', cal: 300, pro: 6 },
-                { name: '超商霜淇淋 (1支)', cal: 200, pro: 4 },
-            ]},
-            { category: '炸物/燒烤', items: [
-                { name: '炸雞排 (1片)', cal: 650, pro: 40 },
-                { name: '鹽酥雞 (1份)', cal: 500, pro: 30 },
-                { name: '炸魷魚 (1份)', cal: 350, pro: 25 },
-                { name: '炸四季豆 (1份)', cal: 150, pro: 2 },
-                { name: '雞米花 (1份)', cal: 400, pro: 20 },
-                { name: '甜不辣 (炸 1份)', cal: 300, pro: 5 },
-                { name: '米血糕 (炸 1支)', cal: 300, pro: 5 },
-                { name: '烤香腸 (1根)', cal: 280, pro: 10 },
-                { name: '米腸 (1根)', cal: 250, pro: 4 },
-                { name: '烤肉串 (豬/牛/雞 1串)', cal: 150, pro: 10 },
-                { name: '烤雞屁股 (1串)', cal: 250, pro: 8 },
-                { name: '烤雞皮 (1串)', cal: 200, pro: 5 },
-                { name: '烤豬血糕 (1支)', cal: 200, pro: 6 },
-                { name: '烤百頁豆腐 (1串)', cal: 180, pro: 10 },
-                { name: '烤豆干 (1串)', cal: 120, pro: 12 },
-                { name: '烤玉米 (1支)', cal: 300, pro: 5 },
-                { name: '烤青椒/香菇 (1串)', cal: 60, pro: 2 },
-                { name: '烤魷魚 (1隻)', cal: 300, pro: 40 },
-            ]},
-            { category: '火鍋店/單點食材', items: [
-                { name: '牛五花肉盤 (150g)', cal: 500, pro: 20 },
-                { name: '低脂板腱牛 (150g)', cal: 250, pro: 30 },
-                { name: '梅花豬肉盤 (150g)', cal: 450, pro: 25 },
-                { name: '豬五花肉盤 (150g)', cal: 600, pro: 20 },
-                { name: '羊肉片 (150g)', cal: 400, pro: 25 },
-                { name: '雞腿肉塊 (150g)', cal: 250, pro: 28 },
-                { name: '海鮮拼盤 (1份)', cal: 300, pro: 40 },
-                { name: '蛤蜊 (1盤)', cal: 60, pro: 10 },
-                { name: '蛋餃 (1個)', cal: 25, pro: 2 },
-                { name: '魚餃 (1個)', cal: 25, pro: 2 },
-                { name: '燕餃 (1個)', cal: 30, pro: 2 },
-                { name: '炸豆皮 (1個)', cal: 60, pro: 4 },
-                { name: '生豆皮 (1片)', cal: 30, pro: 4 },
-                { name: '凍豆腐 (1塊)', cal: 20, pro: 2 },
-                { name: '老油條 (1段)', cal: 50, pro: 1 },
-                { name: '麻辣鍋湯底 (1碗)', cal: 200, pro: 5 },
-                { name: '昆布/蔬菜湯底 (1碗)', cal: 10, pro: 0 },
-                { name: '沙茶醬 (1匙)', cal: 110, pro: 1 },
+                { name: '炒飯 (肉絲)', cal: 700, pro: 15 },
+                { name: '咖哩雞肉飯', cal: 750, pro: 20 },
             ]},
             { category: '湯品/羹湯', items: [
                 { name: '貢丸湯', cal: 150, pro: 8 },
@@ -227,8 +165,7 @@
                 { name: '魚丸湯', cal: 100, pro: 8 },
                 { name: '味噌湯', cal: 60, pro: 4 },
                 { name: '魷魚羹湯', cal: 350, pro: 15 },
-                { name: '排骨酥湯', cal: 400, pro: 15 },
-                { name: '四神湯', cal: 200, pro: 10 },
+                { name: '肉羹湯', cal: 380, pro: 12 },
             ]},
             { category: '冬令進補/鍋物', items: [
                 { name: '羊肉爐 (1人份)', cal: 800, pro: 40 },
@@ -278,7 +215,51 @@
                 { name: '摩斯漢堡 (原味)', cal: 400, pro: 15 },
                 { name: '潛艇堡 (6吋火雞胸)', cal: 350, pro: 20 },
             ]},
-            { category: '飲料/手搖/咖啡', items: [
+            { category: '燒烤/串燒/夜市', items: [
+                { name: '烤香腸 (1根)', cal: 280, pro: 10 },
+                { name: '大腸(米腸) (1根)', cal: 250, pro: 4 },
+                { name: '大腸包小腸 (1組)', cal: 550, pro: 15 },
+                { name: '炭烤雞排 (1份)', cal: 550, pro: 35 },
+                { name: '烤肉串 (豬/牛/雞 1串)', cal: 150, pro: 10 },
+                { name: '烤雞屁股 (1串)', cal: 250, pro: 8 },
+                { name: '烤雞皮 (1串)', cal: 200, pro: 5 },
+                { name: '烤甜不辣 (1串)', cal: 150, pro: 5 },
+                { name: '烤豬血糕 (1支)', cal: 200, pro: 6 },
+                { name: '烤百頁豆腐 (1串)', cal: 180, pro: 10 },
+                { name: '烤豆干 (1串)', cal: 120, pro: 12 },
+                { name: '烤玉米 (1支)', cal: 300, pro: 5 },
+                { name: '烤青椒/香菇 (1串)', cal: 60, pro: 2 },
+                { name: '烤魷魚 (1隻)', cal: 300, pro: 40 },
+                { name: '吐司夾肉 (1份)', cal: 350, pro: 15 },
+            ]},
+             { category: '披薩/炸雞/速食', items: [
+                { name: '夏威夷披薩 (1片)', cal: 220, pro: 10 },
+                { name: '總匯披薩 (1片)', cal: 300, pro: 12 },
+                { name: '海鮮披薩 (1片)', cal: 240, pro: 11 },
+                { name: '美式臘腸披薩 (1片)', cal: 280, pro: 10 },
+                { name: '芝心披薩 (1片)', cal: 350, pro: 12 },
+                { name: '拿坡里炸雞 (1塊)', cal: 300, pro: 18 },
+                { name: '胖老爹炸雞 (1塊)', cal: 320, pro: 18 },
+                { name: '韓式炸雞 (1人份)', cal: 600, pro: 25 },
+            ]},
+            { category: '消夜/炸物/小吃', items: [
+                { name: '鹽酥雞 (1份)', cal: 500, pro: 30 },
+                { name: '炸雞排 (1片)', cal: 650, pro: 40 },
+                { name: '炸魷魚 (1份)', cal: 350, pro: 25 },
+                { name: '炸四季豆 (1份)', cal: 180, pro: 2 },
+                { name: '炸銀絲卷 (1條)', cal: 300, pro: 5 },
+                { name: '甜不辣 (1份)', cal: 300, pro: 5 },
+                { name: '米血糕 (1支)', cal: 300, pro: 5 },
+                { name: '地瓜球 (1份)', cal: 400, pro: 2 },
+                { name: '蚵仔煎', cal: 500, pro: 15 },
+                { name: '章魚燒 (1盒 6顆)', cal: 350, pro: 12 },
+                { name: '大腸包小腸', cal: 550, pro: 15 },
+                { name: '滷味拼盤 (1人份)', cal: 400, pro: 25 },
+                { name: '泡麵 (炸醬麵)', cal: 500, pro: 8 },
+                { name: '泡麵 (統一肉燥)', cal: 400, pro: 7 },
+                { name: '超商霜淇淋 (1支)', cal: 200, pro: 4 },
+            ]},
+             { category: '飲料/手搖/咖啡', items: [
                 { name: '珍珠奶茶 (700ml)', cal: 650, pro: 2 },
                 { name: '紅茶拿鐵/鮮奶茶', cal: 250, pro: 6 },
                 { name: '純茶類 (無糖)', cal: 0, pro: 0 },
@@ -295,7 +276,6 @@
                 { name: '蜂蜜檸檬 (700ml)', cal: 300, pro: 0 },
                 { name: '楊枝甘露 (500ml)', cal: 450, pro: 3 },
                 { name: '抹茶拿鐵 (500ml)', cal: 250, pro: 6 },
-                { name: '木瓜牛奶 (500ml)', cal: 350, pro: 8 },
                 { name: '拿鐵咖啡 (中)', cal: 120, pro: 5 },
                 { name: '美式咖啡', cal: 10, pro: 0 },
                 { name: '焦糖瑪奇朵 (中)', cal: 200, pro: 5 },
@@ -359,6 +339,26 @@
                 { name: '玉米濃湯 (1碗)', cal: 150, pro: 4 },
                 { name: '餐包 (1個)', cal: 100, pro: 2 },
                 { name: '紅茶 (1杯)', cal: 100, pro: 0 },
+            ]},
+             { category: '火鍋店/單點食材', items: [
+                { name: '牛五花肉盤 (150g)', cal: 500, pro: 20 },
+                { name: '低脂板腱牛 (150g)', cal: 250, pro: 30 },
+                { name: '梅花豬肉盤 (150g)', cal: 450, pro: 25 },
+                { name: '豬五花肉盤 (150g)', cal: 600, pro: 20 },
+                { name: '羊肉片 (150g)', cal: 400, pro: 25 },
+                { name: '雞腿肉塊 (150g)', cal: 250, pro: 28 },
+                { name: '海鮮拼盤 (1份)', cal: 300, pro: 40 },
+                { name: '蛤蜊 (1盤)', cal: 60, pro: 10 },
+                { name: '蛋餃 (1個)', cal: 25, pro: 2 },
+                { name: '魚餃 (1個)', cal: 25, pro: 2 },
+                { name: '燕餃 (1個)', cal: 30, pro: 2 },
+                { name: '炸豆皮 (1個)', cal: 60, pro: 4 },
+                { name: '生豆皮 (1片)', cal: 30, pro: 4 },
+                { name: '凍豆腐 (1塊)', cal: 20, pro: 2 },
+                { name: '老油條 (1段)', cal: 50, pro: 1 },
+                { name: '麻辣鍋湯底 (1碗)', cal: 200, pro: 5 },
+                { name: '昆布/蔬菜湯底 (1碗)', cal: 10, pro: 0 },
+                { name: '沙茶醬 (1匙)', cal: 110, pro: 1 },
             ]},
             { category: '健康/自煮 (每100g)', items: [
                 { name: '白飯 (1碗 160g)', cal: 280, pro: 6 },
@@ -752,6 +752,143 @@
                                 </div>
                             )}
                         </form>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- 元件：血壓量測 (BloodPressureSection) ---
+        const BloodPressureSection = ({ todayInput, setTodayInput, handleLogSubmit, saveMessage, logs, currentDate, setCurrentDate, todayStr }) => {
+            const isEditingPast = currentDate !== todayStr;
+            const currentSystolic = todayInput.systolic || '';
+            const currentDiastolic = todayInput.diastolic || '';
+            const currentPulse = todayInput.pulse || '';
+
+            // Get status color based on BP
+            const getBPStatus = (sys, dia) => {
+                if (!sys || !dia) return { text: '未測量', color: 'text-slate-400' };
+                if (sys < 120 && dia < 80) return { text: '正常血壓 🟢', color: 'text-emerald-500' };
+                if (sys >= 140 || dia >= 90) return { text: '高血壓 🔴', color: 'text-red-500' };
+                if (sys >= 130 || dia >= 80) return { text: '血壓偏高 🟠', color: 'text-orange-500' };
+                return { text: '正常偏高 🟡', color: 'text-yellow-500' };
+            };
+
+            const bpStatus = getBPStatus(parseFloat(currentSystolic), parseFloat(currentDiastolic));
+
+            return (
+                <div className="space-y-6 animate-fade-in pb-20">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <HeartPulse className="w-6 h-6 text-rose-500" />
+                            血壓管理
+                        </h2>
+                        <div className="flex items-center gap-2 bg-white rounded-lg px-3 py-1 border border-slate-200 shadow-sm">
+                            <Calendar className="w-4 h-4 text-slate-500" />
+                            <input 
+                                type="date" 
+                                value={currentDate}
+                                onChange={(e) => setCurrentDate(e.target.value)}
+                                className="bg-transparent text-sm text-slate-600 font-bold outline-none border-none p-0 w-28 text-right cursor-pointer"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Chart */}
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-bold text-slate-700 text-sm">近期血壓趨勢</h3>
+                            <div className="text-xs font-bold text-slate-400 flex gap-2">
+                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-rose-500"></span>收縮壓</span>
+                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500"></span>舒張壓</span>
+                            </div>
+                        </div>
+                        <div className="h-64 w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={logs}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis dataKey="date" tick={{fontSize: 10, fill: '#64748b'}} tickMargin={5} />
+                                    <YAxis domain={['dataMin - 10', 'dataMax + 10']} tick={{fontSize: 10, fill: '#64748b'}} />
+                                    <Tooltip contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '12px'}} />
+                                    <Line type="monotone" dataKey="systolic" stroke="#f43f5e" strokeWidth={2} dot={{r: 3}} name="收縮壓" />
+                                    <Line type="monotone" dataKey="diastolic" stroke="#3b82f6" strokeWidth={2} dot={{r: 3}} name="舒張壓" />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+
+                    {/* Input Card */}
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-rose-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                        
+                        <div className="relative z-10">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="font-bold text-slate-700 flex items-center gap-2">
+                                    <PlusCircle className="w-5 h-5 text-rose-500" />
+                                    新增測量
+                                </h3>
+                                <span className={`text-xs font-bold ${bpStatus.color} bg-slate-50 px-2 py-1 rounded border border-slate-100`}>
+                                    {bpStatus.text}
+                                </span>
+                            </div>
+
+                            <form onSubmit={handleLogSubmit} className="space-y-5">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-400 mb-1">收縮壓 (SYS)</label>
+                                        <div className="relative">
+                                            <input 
+                                                type="number" 
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-lg font-black text-slate-700 focus:ring-2 focus:ring-rose-500 outline-none text-center"
+                                                placeholder="0"
+                                                value={currentSystolic}
+                                                onChange={(e) => setTodayInput({...todayInput, systolic: e.target.value})}
+                                            />
+                                            <span className="absolute right-3 bottom-3 text-[10px] text-slate-400 font-bold">mmHg</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-400 mb-1">舒張壓 (DIA)</label>
+                                        <div className="relative">
+                                            <input 
+                                                type="number" 
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-lg font-black text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none text-center"
+                                                placeholder="0"
+                                                value={currentDiastolic}
+                                                onChange={(e) => setTodayInput({...todayInput, diastolic: e.target.value})}
+                                            />
+                                            <span className="absolute right-3 bottom-3 text-[10px] text-slate-400 font-bold">mmHg</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 mb-1">心率 (PULSE)</label>
+                                    <div className="relative">
+                                        <input 
+                                            type="number" 
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-lg font-black text-slate-700 focus:ring-2 focus:ring-purple-500 outline-none text-center"
+                                            placeholder="0"
+                                            value={currentPulse}
+                                            onChange={(e) => setTodayInput({...todayInput, pulse: e.target.value})}
+                                        />
+                                        <span className="absolute right-4 bottom-3 text-[10px] text-slate-400 font-bold">bpm</span>
+                                        <div className="absolute left-4 top-3.5 text-rose-400 animate-pulse">
+                                            <HeartPulse className="w-5 h-5" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" className="w-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white p-3 rounded-lg transition-all font-bold shadow-lg shadow-rose-200 flex justify-center items-center gap-2">
+                                    <Save className="w-4 h-4" /> {isEditingPast ? '更新數值' : '儲存數值'}
+                                </button>
+                                
+                                {saveMessage && (
+                                    <div className="text-center text-emerald-500 text-sm font-bold animate-pulse">
+                                        {saveMessage}
+                                    </div>
+                                )}
+                            </form>
+                        </div>
                     </div>
                 </div>
             );
@@ -1201,6 +1338,7 @@
                                         <th className="px-3 py-3 whitespace-nowrap">日期</th>
                                         <th className="px-2 py-3 whitespace-nowrap">體態</th>
                                         <th className="px-2 py-3 whitespace-nowrap">飲食</th>
+                                        <th className="px-2 py-3 whitespace-nowrap">血壓</th>
                                         <th className="px-3 py-3 text-right whitespace-nowrap">操作</th>
                                     </tr>
                                 </thead>
@@ -1234,6 +1372,16 @@
                                                     </div>
                                                 )}
                                             </td>
+                                            <td className="px-2 py-3 align-top">
+                                                {log.systolic && log.diastolic ? (
+                                                    <div className="text-xs font-bold text-slate-700">
+                                                        {log.systolic}/{log.diastolic}
+                                                        <div className="text-[10px] text-slate-400 font-normal">mmHg</div>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-slate-300">-</span>
+                                                )}
+                                            </td>
                                             <td className="px-2 py-3 text-right align-top">
                                                 <div className="flex flex-col gap-2 items-end">
                                                     <button 
@@ -1254,7 +1402,7 @@
                                     ))}
                                     {logs.length === 0 && (
                                         <tr>
-                                            <td colSpan="4" className="p-8 text-center text-slate-400 font-medium">
+                                            <td colSpan="5" className="p-8 text-center text-slate-400 font-medium">
                                                 尚無紀錄，今天就是改變的開始！
                                             </td>
                                         </tr>
@@ -1432,7 +1580,10 @@
                 calories: '',
                 protein: '',
                 notes: '',
-                burnedCalories: ''
+                burnedCalories: '',
+                systolic: '',
+                diastolic: '',
+                pulse: ''
             });
 
             // Calculate daily burn whenever workoutLogs or currentDate changes
@@ -1487,7 +1638,10 @@
                         visceralFat: existingLog.visceralFat || '',
                         calories: existingLog.calories || '',
                         protein: existingLog.protein || '',
-                        notes: existingLog.notes || ''
+                        notes: existingLog.notes || '',
+                        systolic: existingLog.systolic || '',
+                        diastolic: existingLog.diastolic || '',
+                        pulse: existingLog.pulse || ''
                         // burnedCalories is handled by the other useEffect
                     }));
                 } else {
@@ -1499,7 +1653,10 @@
                         visceralFat: '',
                         calories: '',
                         protein: '',
-                        notes: ''
+                        notes: '',
+                        systolic: '',
+                        diastolic: '',
+                        pulse: ''
                     }));
                 }
             }, [currentDate, logs]); // Added logs to dependency to refresh if logs change elsewhere
@@ -1564,19 +1721,22 @@
 
             const handleLogSubmit = (e) => {
                 e.preventDefault();
-                if (!todayInput.weight && activeTab === 'dashboard') return;
+                // removed !todayInput.weight check to allow saving other data independently
                 
                 // 確保數值是字串，以便儲存
                 const newLog = {
                     date: currentDate,
-                    weight: todayInput.weight ? parseFloat(todayInput.weight) : (activeTab === 'dashboard' ? '' : undefined),
+                    weight: todayInput.weight ? parseFloat(todayInput.weight) : undefined,
                     bodyFat: todayInput.bodyFat ? parseFloat(todayInput.bodyFat) : null,
                     muscleMass: todayInput.muscleMass ? parseFloat(todayInput.muscleMass) : null,
                     visceralFat: todayInput.visceralFat ? parseFloat(todayInput.visceralFat) : null,
                     calories: todayInput.calories ? parseFloat(todayInput.calories) : null,
                     protein: todayInput.protein ? parseFloat(todayInput.protein) : null,
                     notes: todayInput.notes,
-                    burnedCalories: todayInput.burnedCalories ? parseFloat(todayInput.burnedCalories) : 0
+                    burnedCalories: todayInput.burnedCalories ? parseFloat(todayInput.burnedCalories) : 0,
+                    systolic: todayInput.systolic ? parseInt(todayInput.systolic) : null,
+                    diastolic: todayInput.diastolic ? parseInt(todayInput.diastolic) : null,
+                    pulse: todayInput.pulse ? parseInt(todayInput.pulse) : null,
                 };
 
                 // 合併現有資料（避免在不同頁面儲存時覆蓋掉另一頁的資料）
@@ -1592,8 +1752,7 @@
                         ...Object.fromEntries(Object.entries(newLog).filter(([_, v]) => v !== undefined && v !== null && v !== ''))
                     };
                     
-                    // 特殊處理：如果是在 Dashboard 儲存，且輸入框被清空，則視為刪除該欄位? 
-                    // 簡化邏輯：直接覆蓋有輸入的部分。
+                    // Specific logic for different sections
                     if (activeTab === 'diet') {
                         newLogs[existingIndex].calories = newLog.calories || currentLog.calories;
                         newLogs[existingIndex].protein = newLog.protein || currentLog.protein;
@@ -1603,7 +1762,12 @@
                         newLogs[existingIndex].bodyFat = newLog.bodyFat;
                         newLogs[existingIndex].muscleMass = newLog.muscleMass;
                         newLogs[existingIndex].visceralFat = newLog.visceralFat;
+                    } else if (activeTab === 'pressure') {
+                        newLogs[existingIndex].systolic = newLog.systolic;
+                        newLogs[existingIndex].diastolic = newLog.diastolic;
+                        newLogs[existingIndex].pulse = newLog.pulse;
                     }
+
                     // Always update burned calories from state which is synced with workout logs
                     newLogs[existingIndex].burnedCalories = newLog.burnedCalories;
 
@@ -1734,6 +1898,18 @@
                                 setCurrentDate={setCurrentDate}
                             />
                         )}
+                        {activeTab === 'pressure' && (
+                            <BloodPressureSection 
+                                todayInput={todayInput}
+                                setTodayInput={setTodayInput}
+                                handleLogSubmit={handleLogSubmit}
+                                saveMessage={saveMessage}
+                                logs={logs}
+                                currentDate={currentDate}
+                                setCurrentDate={setCurrentDate}
+                                todayStr={todayStr}
+                            />
+                        )}
                         {activeTab === 'history' && (
                             <HistorySection 
                                 logs={logs}
@@ -1772,6 +1948,13 @@
                             >
                                 <Dumbbell className="w-5 h-5" />
                                 <span className="text-[10px] font-bold">運動</span>
+                            </button>
+                            <button 
+                                onClick={() => setActiveTab('pressure')}
+                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'pressure' ? 'text-red-600' : 'text-slate-400 hover:text-slate-600'}`}
+                            >
+                                <HeartPulse className="w-5 h-5" />
+                                <span className="text-[10px] font-bold">血壓</span>
                             </button>
                             <button 
                                 onClick={() => setActiveTab('history')}
